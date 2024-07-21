@@ -7,6 +7,12 @@ export default defineConfig({
   assetsInclude: ["**/*.glb"],
   build: {
     rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "@mui/material", "three"],
+          // Add other large dependencies here
+        },
+      },
       external: [
         "react-slick",
         "slick-carousel/slick/slick.css",

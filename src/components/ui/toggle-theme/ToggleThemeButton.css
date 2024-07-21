@@ -1,0 +1,9 @@
+.toggle-theme-button {
+  position: absolute;
+  top: 5px;
+  right: 5px; 
+  display: flex;
+  justify-content: right;
+  pointer-events: auto;
+  z-index: 5;
+}
