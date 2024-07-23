@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.4.0",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@humeai/voice-react": "^0.1.10",
     "@mui/icons-material": "^5.16.4",
     "@mui/material": "^5.16.4",
+    "@react-spring/three": "^9.7.4",
     "@react-three/drei": "^9.108.4",
     "@react-three/fiber": "^8.16.8",
     "@react-three/postprocessing": "^2.16.2",
@@ -28,6 +30,7 @@
     "react-router-dom": "^6.25.1",
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1",
+    "three": "^0.166.1",
     "tinycolor2": "^1.6.0"
   },
   "devDependencies": {

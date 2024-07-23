@@ -7,7 +7,7 @@ import './Home.css';
 
 const Home = () => {
   const [accessToken, setAccessToken] = useState("");
-  const [resumeChatGroupId, setResumeChatGroupId] = useState(
+  const [resumedChatGroupId, setResumedChatGroupId] = useState(
     localStorage.getItem("chat_group_id") || ""
   );
   const [characterNames, setCharacterNames] = useState(
@@ -37,7 +37,8 @@ const Home = () => {
     if (message.type === "chat_metadata") {
       console.log("Received chat metadata:", message);
       localStorage.setItem("chat_group_id", message.chat_group_id);
-      setResumeChatGroupId(message.chat_group_id);
+      setResumedChatGroupId(message.chat_group_id);
+      console.log(`chat group id set: ${resumedChatGroupId}`)
     }
   };
 
@@ -126,7 +127,7 @@ const Home = () => {
           configId={"982405eb-6d48-4faa-808c-26202ae17933"} // set your configId here
           onMessage={handleWebSocketMessageEvent}
           onToolCall={handleToolCall}
-          {...(resumeChatGroupId && { resumedChatGroupId: resumeChatGroupId })}
+          resumedChatGroupId={resumedChatGroupId}
         >
           <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-auto">
             <ChatStage
