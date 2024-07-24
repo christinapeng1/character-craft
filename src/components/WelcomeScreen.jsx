@@ -1,6 +1,6 @@
 import React from "react";
-import KiteCanvas from "../../../components/3d-canvas/KiteCanvas";
-import "../Home.css";
+import KiteCanvas from "./3d-canvas/KiteCanvas";
+import "../pages/home/Home.css";
 
 const WelcomeScreen = ({ handleEnterChatStage, status }) => {
   return (

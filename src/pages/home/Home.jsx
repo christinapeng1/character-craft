@@ -2,19 +2,27 @@ import {useState, useEffect} from 'react';
 import { fetchAccessToken } from 'hume';
 import { VoiceProvider } from "@humeai/voice-react";
 import { lightenColor } from "../../utils/adjustColor.ts"
-import ChatStage from "./ManageChatStage.jsx";
+import ChatStage from "./ChatStage.jsx";
+import { formatTimestamp } from "../../utils/formatTimestamp.ts";
 import './Home.css';
 
 const Home = () => {
   const [accessToken, setAccessToken] = useState("");
-  const [resumedChatGroupId, setResumedChatGroupId] = useState(
-    localStorage.getItem("chat_group_id") || ""
-  );
   const [characterNames, setCharacterNames] = useState(
     JSON.parse(localStorage.getItem("character_names")) || []
   );
   const [characterColor, setCharacterColor] = useState("#daf8e3"); 
-  const [currentCharacter, setCurrentCharacter] = useState("Magical Kite"); 
+  const [currentCharacter, setCurrentCharacter] = useState("Magical Kite");
+  const [resumedChatGroupId, setResumedChatGroupId] = useState(
+    localStorage.getItem("chat_group_id") || ""
+  );
+  const [chatGroupsData, setChatGroupsData] = useState([]);
+  const [chatGroupTranscript, setChatGroupTranscript] = useState([]);
+  
+  const [popoverVisible, setPopoverVisible] = useState(false);
+  const [popoverTarget, setPopoverTarget] = useState(null);
+
+  const [storySlidesOpen, setStorySlidesOpen] = useState(false);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -26,19 +34,91 @@ const Home = () => {
       setAccessToken(accessToken);
     };
     fetchToken();
-  })
+  }, [])
 
-  const handleStatusChange = (status) => {
-    setIsConnected(status === "connected");
+  //fetch a list of chat groups
+  useEffect(() => {
+    const fetchChatGroups = async () => {
+      try {
+        const response = await fetch(
+          `https://api.hume.ai/v0/evi/chat_groups?page_number=0&ascending_order=false&page_size=12`,
+          {
+            method: "GET",
+            headers: {
+              "X-Hume-Api-Key": import.meta.env.VITE_HUME_API_KEY,
+            },
+          }
+        );
+        const body = await response.json();
+
+        const chatGroupsData = body.chat_groups_page.map((group) => ({
+          id: group.id,
+          timestamp: group.first_start_timestamp,
+          label: `${formatTimestamp(group.first_start_timestamp)}`,
+        }));
+
+        setChatGroupsData(chatGroupsData);
+      } catch (error) {
+        console.error("Error fetching chat groups:", error);
+      }
+    };
+    fetchChatGroups();
+  }, []);
+
+  const handleChatSelect = async (key, event) => {
+    if (key === "story") {
+      setStorySlidesOpen(true);
+    } else {
+      setPopoverVisible(true);
+      setPopoverTarget(event.currentTarget);
+      setResumedChatGroupId(key);
+    }
   };
+
+  useEffect(() => {
+    if (resumedChatGroupId) {
+      fetchChatGroupTranscript();
+    }
+  }, [resumedChatGroupId]);
+
+  const fetchChatGroupTranscript = async () => {
+    try {
+      // List chat events from a specific chat_group (GET /v0/evi/chat_groups/:id/events)
+      const response = await fetch(
+        `https://api.hume.ai/v0/evi/chat_groups/${resumedChatGroupId}/events?ascending_order=false&page_size=10&page_number=0`,
+        {
+          method: "GET",
+          headers: {
+            "X-Hume-Api-Key": import.meta.env.VITE_HUME_API_KEY,
+          },
+        }
+      );
+      const body = await response.json();
+
+      const chatGroupTranscriptData = body.events_page
+        .map((msg) => ({
+          type: msg.type,
+          content: msg.message_text,
+          emotion_features: msg.emotion_features,
+          timestamp: `${formatTimestamp(msg.timestamp)}`,
+        }))
+        .reverse();
+
+      setChatGroupTranscript(chatGroupTranscriptData);
+    } catch (error) {
+        console.error("Error fetching chat group transcript data:", error);
+      }
+  }
+
+  const handleCloseStorySlides = () => setStorySlidesOpen(false);
+
+  const handleHidePopover = () => setPopoverVisible(false);
 
   const handleWebSocketMessageEvent = async (message) => {
     console.log("WebSocket message received:", message);
     if (message.type === "chat_metadata") {
-      console.log("Received chat metadata:", message);
       localStorage.setItem("chat_group_id", message.chat_group_id);
       setResumedChatGroupId(message.chat_group_id);
-      console.log(`chat group id set: ${resumedChatGroupId}`)
     }
   };
 
@@ -124,7 +204,7 @@ const Home = () => {
       <>
         <VoiceProvider
           auth={{ type: "accessToken", value: accessToken }}
-          configId={"982405eb-6d48-4faa-808c-26202ae17933"} // set your configId here
+          // configId={import.meta.env.VITE_HUME_CONFIG_ID || ""} // set your configId here
           onMessage={handleWebSocketMessageEvent}
           onToolCall={handleToolCall}
           resumedChatGroupId={resumedChatGroupId}
@@ -132,10 +212,18 @@ const Home = () => {
           <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-auto">
             <ChatStage
               className="pointer-events-auto"
-              onStatusChange={handleStatusChange}
               characterNames={characterNames}
               characterColor={characterColor}
               currentCharacter={currentCharacter}
+              chatGroupsData={chatGroupsData}
+              handleChatSelect={handleChatSelect}
+              handleCloseStorySlides={handleCloseStorySlides}
+              handleHidePopover={handleHidePopover}
+              storySlidesOpen={storySlidesOpen}
+              setPopoverVisible={setPopoverVisible}
+              popoverVisible={popoverVisible}
+              popoverTarget={popoverTarget}
+              chatGroupTranscript={chatGroupTranscript}
             />
           </div>
         </VoiceProvider>

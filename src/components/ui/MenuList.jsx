@@ -1,14 +1,19 @@
 import { Menu } from "antd";
 import { BookOutlined, BarsOutlined } from "@ant-design/icons";
 
-const MenuList = ({ darkTheme, onChatSelect, characterNames = [] }) => {
-  const characterItems = characterNames.map((name) => ({
-    label: name,
-    key: name,
+const MenuList = ({
+  darkTheme,
+  onChatSelect,
+  chatGroupsData
+}) => {
+
+  const chatGroupItems = chatGroupsData.map((group) => ({
+    label: group.label,
+    key: group.id,
   }));
 
   const handleClick = (e) => {
-    onChatSelect(e.key);
+    onChatSelect(e.key, e.domEvent);
   };
 
   const menuItems = [
@@ -18,10 +23,10 @@ const MenuList = ({ darkTheme, onChatSelect, characterNames = [] }) => {
       icon: <BookOutlined />,
     },
     {
-      label: "Characters",
-      key: "characters",
+      label: "Chats",
+      key: "chats",
       icon: <BarsOutlined />,
-      children: characterItems,
+      children: chatGroupItems,
     },
   ];
 

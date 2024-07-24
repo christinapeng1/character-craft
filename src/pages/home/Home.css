@@ -37,6 +37,20 @@
   margin-left: 15px;
 }
 
+.disconnect-button-wrapper {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.placeholder {
+  height: 5vh;
+  visibility: hidden; /* Keeps space but hides the content */
+}
+
 .kitecanvas-wrapper {
   position: absolute;
   top: 0;

@@ -58,20 +58,20 @@ const Controls = ({color, currentCharacter}) => {
     }
   };
 
-  const handleConnect = () => {
-    if (status.value === "connected") {
-      disconnect();
-      return;
-    } else {
-      try {
-        connect().then(() => {
-          sendUserInput("CONTINUE: please continue.");
-        })
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
+  // const handleConnect = () => {
+  //   if (status.value === "connected") {
+  //     disconnect();
+  //     return;
+  //   } else {
+  //     try {
+  //       connect().then(() => {
+  //         sendUserInput("CONTINUE: please continue.");
+  //       })
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }
+  // };
 
   const handleChangeCharacter = () => {
     sendUserInput("Oh magical kite, take me to a new character");
@@ -144,15 +144,15 @@ const Controls = ({color, currentCharacter}) => {
             <AutoAwesomeIcon /> Change character
           </>
         </button>
-        <button
+        {/* <button
           className="control-button connected-button pointer-events-auto"
-          onClick={() => handleConnect()}
+          onClick={handleConnect}
           style={{ backgroundColor: color }}
         >
           {status.value === "connected"
             ? "End conversation"
             : "Start conversation"}
-        </button>
+        </button> */}
       </div>
     </div>
   );

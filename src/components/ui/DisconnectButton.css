@@ -1,0 +1,26 @@
+.disconnect-button {
+  height: 5vh;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  width: 100%;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+.disconnect-button.dark {
+  color: white;
+}
+
+.disconnect-button.light {
+  color: black;
+}
+
+.disconnect-button .icon {
+  margin-right: 8px; /* Add spacing between the icon and text */
+}

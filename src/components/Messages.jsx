@@ -1,26 +1,18 @@
 import { useVoice } from "@humeai/voice-react";
 import React, { useState, useEffect, useRef } from "react";
-import { darkenColor } from "../../../utils/adjustColor";
+import { darkenColor } from "../utils/adjustColor";
 import SendIcon from "@mui/icons-material/Send";
 import { expressionColors } from "expression-colors";
-import { getTopNProsody } from "../../../utils/getTopNProsody";
+import { getTopNProsody } from "../utils/getTopNProsody";
 import Tooltip from "@mui/material/Tooltip";
 
-type Expression = keyof typeof expressionColors;
-
-interface MessagesProps {
-  characterColor: string;
-}
-
-const Messages: React.FC<MessagesProps> = ({ characterColor }) => {
-  const { messages, sendUserInput } = useVoice();
-  const chatEndRef = useRef<HTMLDivElement>(null);
+const Messages = ({ characterColor, chatGroupTranscript }) => {
+  const { connect, messages, sendUserInput, status } = useVoice();
+  const chatEndRef = useRef(null);
   const [userInput, setUserInput] = useState("");
-  const [clickedUserEmotionIndex, setClickedUserEmotionIndex] = useState<
-    number | null
-  >(null);
+  const [clickedUserEmotionIndex, setClickedUserEmotionIndex] = useState(null);
   const [clickedAssistantEmotionIndex, setClickedAssistantEmotionIndex] =
-    useState<number | null>(null);
+    useState(null);
   const assistantBorderColor = darkenColor(characterColor, 15);
 
   const scrollToBottom = () => {
@@ -31,12 +23,24 @@ const Messages: React.FC<MessagesProps> = ({ characterColor }) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, chatGroupTranscript]);
 
   const handleSendMessage = () => {
     if (userInput.trim()) {
-      sendUserInput(userInput);
-      setUserInput(""); // Clear the input box after sending the message
+      try {
+        if (status.value === "disconnected") {
+          connect().then(() => {
+            sendUserInput(userInput);
+            setUserInput("");
+          });
+        } else {
+          sendUserInput(userInput);
+          setUserInput(""); // Clear the input box after sending the message
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+        // Optionally, you can add some user feedback here
+      }
     }
   };
 
@@ -47,13 +51,13 @@ const Messages: React.FC<MessagesProps> = ({ characterColor }) => {
     }
   };
 
-  const handleUserEmotionClick = (index: number) => {
+  const handleUserEmotionClick = (index) => {
     setClickedUserEmotionIndex(
       index === clickedUserEmotionIndex ? null : index
     );
   };
 
-  const handleAssistantEmotionClick = (index: number) => {
+  const handleAssistantEmotionClick = (index) => {
     setClickedAssistantEmotionIndex(
       index === clickedAssistantEmotionIndex ? null : index
     );
@@ -62,6 +66,35 @@ const Messages: React.FC<MessagesProps> = ({ characterColor }) => {
   return (
     <React.Fragment>
       <div className="chat-container" id="chat-container">
+        {chatGroupTranscript &&
+          chatGroupTranscript.map((msg, index) => {
+            if (msg.type === "USER_MESSAGE") {
+              return (
+                <div
+                  key={`past-user-${index}`}
+                  className="user-message message"
+                >
+                  <div className="content">{msg.content}</div>
+                </div>
+              );
+            }
+            if (msg.type === "AGENT_MESSAGE") {
+              return (
+                <div
+                  key={`past-assistant-${index}`}
+                  className="assistant-message message"
+                  style={{
+                    backgroundColor: characterColor,
+                    border: "2px solid " + assistantBorderColor,
+                  }}
+                >
+                  <div className="content">{msg.content}</div>
+                </div>
+              );
+            }
+            return null;
+          })}
+
         {messages.map((msg, index) => {
           if (msg.type === "user_message") {
             const topUserEmotions = getTopNProsody(
@@ -95,7 +128,7 @@ const Messages: React.FC<MessagesProps> = ({ characterColor }) => {
                       <div
                         className="emotion-circle pointer-events-auto"
                         style={{
-                          backgroundColor: `rgba(${expressionColors[topUserEmotions[0].name as Expression].rgba})`,
+                          backgroundColor: `rgba(${expressionColors[topUserEmotions[0].name].rgba})`,
                         }}
                       ></div>
                     </Tooltip>
@@ -109,7 +142,7 @@ const Messages: React.FC<MessagesProps> = ({ characterColor }) => {
                             <div
                               className="emotion-circle"
                               style={{
-                                backgroundColor: `rgba(${expressionColors[score.name as Expression].rgba})`,
+                                backgroundColor: `rgba(${expressionColors[score.name].rgba})`,
                               }}
                             ></div>
                           </Tooltip>
@@ -152,7 +185,7 @@ const Messages: React.FC<MessagesProps> = ({ characterColor }) => {
                       <div
                         className="emotion-circle pointer-events-auto"
                         style={{
-                          backgroundColor: `rgba(${expressionColors[topAssistantEmotions[0].name as Expression].rgba})`,
+                          backgroundColor: `rgba(${expressionColors[topAssistantEmotions[0].name].rgba})`,
                         }}
                       ></div>
                     </Tooltip>
@@ -168,7 +201,7 @@ const Messages: React.FC<MessagesProps> = ({ characterColor }) => {
                             <div
                               className="emotion-circle"
                               style={{
-                                backgroundColor: `rgba(${expressionColors[score.name as Expression].rgba})`,
+                                backgroundColor: `rgba(${expressionColors[score.name].rgba})`,
                               }}
                             ></div>
                           </Tooltip>
