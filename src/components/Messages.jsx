@@ -6,7 +6,7 @@ import { expressionColors } from "expression-colors";
 import { getTopNProsody } from "../utils/getTopNProsody";
 import Tooltip from "@mui/material/Tooltip";
 
-const Messages = ({ colorTheme, chatGroupTranscript, newChat, setNewChat }) => {
+const Messages = ({ colorTheme, chatGroupTranscript }) => {
   const { connect, messages, sendUserInput, status } = useVoice();
   const chatEndRef = useRef(null);
   const [userInput, setUserInput] = useState("");
@@ -102,12 +102,7 @@ const Messages = ({ colorTheme, chatGroupTranscript, newChat, setNewChat }) => {
               3
             );
             if (
-              msg.message.content
-                .trim()
-                .startsWith("SUMMARY_OF_PREVIOUS_CONVERSATION:") ||
-              msg.message.content.trim().startsWith("I_AM_A_NEW_USER:") ||
-              msg.message.content.trim().startsWith("I_AM_A_RETURNING_USER:") ||
-              msg.message.content.trim().startsWith("I_AM_A_LOGGED_IN_USER:")
+              msg.message.content.trim().startsWith("CONTINUE_MESSAGE:")
             ) {
               return null; // Skip rendering this message
             }

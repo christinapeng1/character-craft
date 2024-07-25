@@ -1,7 +1,6 @@
 import React from 'react';
 import {Route, BrowserRouter as Router, Routes} from 'react-router-dom';
-import {Home} from './pages';
-import ChatStage from './pages/home/ChatStage';
+import { Home, NewChat, ChatInterface } from "./pages";
 
 const App = () => {
   return (
@@ -9,8 +8,8 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
-            {/* <Route path="/chat/new" element={<NewChat />} />
-            <Route path="/chat/:chatGroupId" element={<ChatScreen />} /> */}
+            <Route path="/chat/new" element={<NewChat />} />
+            <Route path="/chat/:chatGroupId" element={<NewChat />} />
           </Routes>
         </Router>
     </main>

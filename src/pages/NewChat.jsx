@@ -1,44 +1,46 @@
-import {useState, useEffect} from 'react';
-import { fetchAccessToken } from 'hume';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { fetchAccessToken } from "hume";
 import { VoiceProvider } from "@humeai/voice-react";
-import { lightenColor } from "../../utils/adjustColor.ts"
-import ChatStage from "./ChatStage.jsx";
-import { formatTimestamp } from "../../utils/formatTimestamp.ts";
-import { createToolIfNotExists } from "../../utils/createTool.ts";
-import './Home.css';
+import { lightenColor } from "../utils/adjustColor.ts";
+import ChatInterface from "./ChatInterface.jsx";
+import { formatTimestamp } from "../utils/formatTimestamp.ts";
+import { createToolIfNotExists } from "../utils/createTool.ts";
+import "./Home.css";
 
-const Home = () => {
+const NewChat = () => {
+  const { chatGroupId } = useParams();
+  const navigate = useNavigate();
+
   const [accessToken, setAccessToken] = useState("");
-  const [colorTheme, setColorTheme] = useState("#daf8e3"); 
+  const [colorTheme, setColorTheme] = useState("#daf8e3");
   const [currentCharacter, setCurrentCharacter] = useState("Magical Kite");
-  const [resumedChatGroupId, setResumedChatGroupId] = useState(
-    localStorage.getItem("chat_group_id") || ""
-  );
   const [chatGroupsData, setChatGroupsData] = useState([]);
   const [chatGroupTranscript, setChatGroupTranscript] = useState([]);
-  
-  const [selectedChat, setSelectedChat] = useState(false);
+
+  const [currentChat, setCurrentChat] = useState("");
 
   const [storySlidesOpen, setStorySlidesOpen] = useState(false);
 
   useEffect(() => {
     const fetchToken = async () => {
       // make sure to set these environment variables
-      const accessToken = (await fetchAccessToken({
-        apiKey: import.meta.env.VITE_HUME_API_KEY || "",
-        secretKey: import.meta.env.VITE_HUME_SECRET_KEY || "",
-      }) || "");
+      const accessToken =
+        (await fetchAccessToken({
+          apiKey: import.meta.env.VITE_HUME_API_KEY || "",
+          secretKey: import.meta.env.VITE_HUME_SECRET_KEY || "",
+        })) || "";
       setAccessToken(accessToken);
     };
     fetchToken();
-  }, [])
+  }, []);
 
-  //fetch a list of chat groups
+  //fetch the most recent 10 chat groups
   useEffect(() => {
     const fetchChatGroups = async () => {
       try {
         const response = await fetch(
-          `https://api.hume.ai/v0/evi/chat_groups?page_number=0&ascending_order=false&page_size=12`,
+          `https://api.hume.ai/v0/evi/chat_groups?page_number=0&ascending_order=false&page_size=10`,
           {
             method: "GET",
             headers: {
@@ -68,7 +70,7 @@ const Home = () => {
       }
     };
     fetchChatGroups();
-  }, [resumedChatGroupId]);
+  }, [chatGroupId]);
 
   useEffect(() => {
     const changeColorToolName = "change_color";
@@ -84,36 +86,36 @@ const Home = () => {
       changeColorToolDescription,
       changeColorToolFallbackContent
     );
-  }, [])
+  }, []);
 
-  const handleChatSelect = async (key, event) => {
+  const handleChatSelect = async (key) => {
     if (key === "story") {
       setStorySlidesOpen(true);
     } else if (key === "Start new chat") {
-      setSelectedChat(true);
-      setResumedChatGroupId("")
+      setCurrentChat("new");
       setChatGroupTranscript([]);
+      navigate(`/chat/new`);
     } else {
-      setSelectedChat(true);
-      setResumedChatGroupId(key);
+      setCurrentChat(key);
+      navigate(`/chat/${key}`);
     }
   };
 
   useEffect(() => {
-    if (resumedChatGroupId) {
+    if (chatGroupId) {
       fetchChatGroupTranscript();
     }
-  }, [resumedChatGroupId, selectedChat]);
+  }, [chatGroupId, currentChat]);
 
   const fetchChatGroupTranscript = async () => {
-    if (resumedChatGroupId === "") {
+    if (!chatGroupId) {
       setChatGroupTranscript([]);
       return;
     }
 
     try {
       const response = await fetch(
-        `https://api.hume.ai/v0/evi/chat_groups/${resumedChatGroupId}/events?ascending_order=false&page_size=10&page_number=0`,
+        `https://api.hume.ai/v0/evi/chat_groups/${chatGroupId}/events?ascending_order=false&page_size=10&page_number=0`,
         {
           method: "GET",
           headers: {
@@ -147,20 +149,12 @@ const Home = () => {
 
   const handleCloseStorySlides = () => setStorySlidesOpen(false);
 
-  const handleWebSocketMessageEvent = async (message) => {
-    console.log("WebSocket message received:", message);
-    if (message.type === "chat_metadata") {
-      localStorage.setItem("chat_group_id", message.chat_group_id);
-      setResumedChatGroupId(message.chat_group_id);
-    }
-  };
-
   const handleToolCall = async (toolCall) => {
     console.log("Tool call received", toolCall);
-    if (toolCall.name === 'change_color'){
+    if (toolCall.name === "change_color") {
       try {
         const args = JSON.parse(toolCall.parameters);
-        if (args && args.color){
+        if (args && args.color) {
           console.log(`Color ${args.color}.`);
           const lighterColor = lightenColor(args.color, 60);
           setColorTheme(lighterColor);
@@ -178,7 +172,8 @@ const Home = () => {
           error: "Character change error",
           code: "character_change_error",
           level: "warn",
-          content: "The kite is glitching, and lost its ability to change characters.",
+          content:
+            "The kite is glitching, and lost its ability to change characters.",
         };
       }
     }
@@ -189,13 +184,11 @@ const Home = () => {
       <>
         <VoiceProvider
           auth={{ type: "accessToken", value: accessToken }}
-          // configId={import.meta.env.VITE_HUME_CONFIG_ID || ""} // set your configId here
-          onMessage={handleWebSocketMessageEvent}
           onToolCall={handleToolCall}
-          resumedChatGroupId={resumedChatGroupId}
+          resumedChatGroupId={chatGroupId}
         >
           <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-auto">
-            <ChatStage
+            <ChatInterface
               className="pointer-events-auto"
               colorTheme={colorTheme}
               currentCharacter={currentCharacter}
@@ -203,8 +196,7 @@ const Home = () => {
               handleChatSelect={handleChatSelect}
               handleCloseStorySlides={handleCloseStorySlides}
               storySlidesOpen={storySlidesOpen}
-              setSelectedChat={setSelectedChat}
-              selectedChat={selectedChat}
+              currentChat={currentChat}
               chatGroupTranscript={chatGroupTranscript}
             />
           </div>
@@ -213,6 +205,6 @@ const Home = () => {
       <div className="gradient-bg w-full h-full absolute top-0 left-0 pointer-events-none"></div>
     </section>
   );
-}
+};
 
-export default Home
+export default NewChat;

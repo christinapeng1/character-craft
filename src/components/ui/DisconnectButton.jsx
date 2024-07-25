@@ -2,11 +2,11 @@ import React from "react";
 import { LogoutOutlined } from "@ant-design/icons";
 import "./DisconnectButton.css";
 
-const DisconnectButton = ({ handleLeaveChatStage, darkTheme }) => {
+const DisconnectButton = ({ handleNavigateHome, darkTheme }) => {
   return (
     <button
       className={`disconnect-button ${darkTheme ? "dark" : "light"}`}
-      onClick={handleLeaveChatStage}
+      onClick={handleNavigateHome}
     >
       <LogoutOutlined className="icon" />
       Disconnect
