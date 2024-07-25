@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -10,7 +10,12 @@ import { useVoice } from "@humeai/voice-react";
 import Waveform from "./Waveform";
 import "./Controls.css";
 
-const Controls = ({color, currentCharacter}) => {
+const Controls = ({
+  color,
+  currentCharacter,
+  selectedChat,
+  setSelectedChat,
+}) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isMicMuted, setIsMicMuted] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
@@ -18,15 +23,36 @@ const Controls = ({color, currentCharacter}) => {
     sendPauseAssistantMessage,
     sendResumeAssistantMessage,
     sendUserInput,
+    sendAssistantInput,
     mute,
     unmute,
     muteAudio,
     unmuteAudio,
     lastVoiceMessage,
+    clearMessages,
     connect,
     disconnect,
-    status
+    status,
   } = useVoice();
+
+  useEffect(() => {
+    if (selectedChat) {
+      disconnect();
+      clearMessages();
+      setSelectedChat(false);
+      console.log("disconnected from current session");
+    }
+  }, [selectedChat]);
+
+  const handleConnectChatGroup = async () => {
+    if (status.value === "disconnected"){
+      connect().then(() => {
+        sendAssistantInput("Hey, welcome back!");
+      });
+    } else {
+      disconnect();
+    }
+  };
 
   const handlePause = () => {
     if (isPaused) {
@@ -58,24 +84,11 @@ const Controls = ({color, currentCharacter}) => {
     }
   };
 
-  // const handleConnect = () => {
-  //   if (status.value === "connected") {
-  //     disconnect();
-  //     return;
-  //   } else {
-  //     try {
-  //       connect().then(() => {
-  //         sendUserInput("CONTINUE: please continue.");
-  //       })
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   }
-  // };
+  const isDisabled = status.value === "disconnected";
 
   const handleChangeCharacter = () => {
     sendUserInput("Oh magical kite, take me to a new character");
-  }
+  };
 
   return (
     <div className="controls-container">
@@ -86,18 +99,28 @@ const Controls = ({color, currentCharacter}) => {
       </div>
       <div className="button-container">
         <button
+          className="control-button connected-button pointer-events-auto"
+          onClick={handleConnectChatGroup}
+          style={{ backgroundColor: color }}
+        >
+          {status.value === "connected"
+            ? "End conversation"
+            : "Start conversation"}
+        </button>
+        <button
           onClick={handleMuteMic}
           className="control-button mute-button pointer-events-auto"
           style={{ backgroundColor: color }}
+          disabled={isDisabled}
         >
           {isMicMuted ? (
             <>
-              <MicOffIcon />
+              <MicOffIcon className="icon" />
               Unmute my mic
             </>
           ) : (
             <>
-              <MicIcon />
+              <MicIcon className="icon" />
               Mute my mic
             </>
           )}
@@ -106,14 +129,15 @@ const Controls = ({color, currentCharacter}) => {
           onClick={handlePause}
           className="control-button pause-button pointer-events-auto"
           style={{ backgroundColor: color }}
+          disabled={isDisabled}
         >
           {isPaused ? (
             <>
-              <PlayArrowIcon /> Resume character
+              <PlayArrowIcon className="icon" /> Resume character
             </>
           ) : (
             <>
-              <PauseIcon />
+              <PauseIcon className="icon" />
               Pause character
             </>
           )}
@@ -122,15 +146,16 @@ const Controls = ({color, currentCharacter}) => {
           onClick={handleMuteAudio}
           className="control-button mute-button pointer-events-auto"
           style={{ backgroundColor: color }}
+          disabled={isDisabled}
         >
           {isAudioMuted ? (
             <>
-              <VolumeMuteIcon />
+              <VolumeMuteIcon className="icon" />
               Unmute character
             </>
           ) : (
             <>
-              <VolumeUpIcon />
+              <VolumeUpIcon className="icon" />
               Mute character
             </>
           )}
@@ -139,20 +164,12 @@ const Controls = ({color, currentCharacter}) => {
           onClick={handleChangeCharacter}
           className="control-button change-character-button pointer-events-auto"
           style={{ backgroundColor: color }}
+          disabled={isDisabled}
         >
           <>
-            <AutoAwesomeIcon /> Change character
+            <AutoAwesomeIcon className="icon" /> Change color theme
           </>
         </button>
-        {/* <button
-          className="control-button connected-button pointer-events-auto"
-          onClick={handleConnect}
-          style={{ backgroundColor: color }}
-        >
-          {status.value === "connected"
-            ? "End conversation"
-            : "Start conversation"}
-        </button> */}
       </div>
     </div>
   );

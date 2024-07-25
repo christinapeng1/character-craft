@@ -6,14 +6,14 @@ import { expressionColors } from "expression-colors";
 import { getTopNProsody } from "../utils/getTopNProsody";
 import Tooltip from "@mui/material/Tooltip";
 
-const Messages = ({ characterColor, chatGroupTranscript }) => {
+const Messages = ({ colorTheme, chatGroupTranscript, newChat, setNewChat }) => {
   const { connect, messages, sendUserInput, status } = useVoice();
   const chatEndRef = useRef(null);
   const [userInput, setUserInput] = useState("");
   const [clickedUserEmotionIndex, setClickedUserEmotionIndex] = useState(null);
   const [clickedAssistantEmotionIndex, setClickedAssistantEmotionIndex] =
     useState(null);
-  const assistantBorderColor = darkenColor(characterColor, 15);
+  const assistantBorderColor = darkenColor(colorTheme, 15);
 
   const scrollToBottom = () => {
     if (chatEndRef.current) {
@@ -84,7 +84,7 @@ const Messages = ({ characterColor, chatGroupTranscript }) => {
                   key={`past-assistant-${index}`}
                   className="assistant-message message"
                   style={{
-                    backgroundColor: characterColor,
+                    backgroundColor: colorTheme,
                     border: "2px solid " + assistantBorderColor,
                   }}
                 >
@@ -167,7 +167,7 @@ const Messages = ({ characterColor, chatGroupTranscript }) => {
                   key={`assistant-${index}`}
                   className="assistant-message message"
                   style={{
-                    backgroundColor: characterColor,
+                    backgroundColor: colorTheme,
                     border: "2px solid " + assistantBorderColor, // Corrected the border style
                   }}
                 >

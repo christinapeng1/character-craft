@@ -69,7 +69,17 @@
 
 .control-button:active {
   box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5); /* Further reduced solid shadow on active */
-  transform: translateY(2px); /* Simulate pressed button */
+  transform: translateY(1px); /* Simulate pressed button */
+}
+
+.control-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.control-button .icon {
+  position: absolute;
+  left: 20px;
 }
 
 .currently-speaking {

@@ -11,17 +11,18 @@ const {Header, Sider} = Layout;
 
 const ChatStage = ({
   characterNames,
-  characterColor,
+  colorTheme,
   currentCharacter,
   chatGroupsData,
   handleChatSelect,
   handleCloseStorySlides,
-  handleHidePopover,
-  setPopoverVisible,
+  setSelectedChat,
   storySlidesOpen,
-  popoverVisible,
-  popoverTarget,
+  selectedChat,
   chatGroupTranscript,
+  resetChatGroupId,
+  setNewChat,
+  newChat
 }) => {
   const { connect, disconnect, status, sendUserInput } = useVoice();
   const [inChatStage, setInChatStage] = useState(false);
@@ -59,19 +60,20 @@ const ChatStage = ({
         ) : (
           <ChatScreen
             characterNames={characterNames}
-            characterColor={characterColor}
+            colorTheme={colorTheme}
             currentCharacter={currentCharacter}
             colorBgContainer={colorBgContainer}
             chatGroupsData={chatGroupsData}
             handleChatSelect={handleChatSelect}
             handleCloseStorySlides={handleCloseStorySlides}
             storySlidesOpen={storySlidesOpen}
-            setPopoverVisible={setPopoverVisible}
-            popoverVisible={popoverVisible}
-            popoverTarget={popoverTarget}
-            handleHidePopover={handleHidePopover}
+            setSelectedChat={setSelectedChat}
+            selectedChat={selectedChat}
             chatGroupTranscript={chatGroupTranscript}
             handleLeaveChatStage={handleLeaveChatStage}
+            resetChatGroupId={resetChatGroupId}
+            setNewChat={setNewChat}
+            newChat={newChat}
           />
         )}
       </div>

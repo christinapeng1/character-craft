@@ -4,14 +4,12 @@ import { VoiceProvider } from "@humeai/voice-react";
 import { lightenColor } from "../../utils/adjustColor.ts"
 import ChatStage from "./ChatStage.jsx";
 import { formatTimestamp } from "../../utils/formatTimestamp.ts";
+import { createToolIfNotExists } from "../../utils/createTool.ts";
 import './Home.css';
 
 const Home = () => {
   const [accessToken, setAccessToken] = useState("");
-  const [characterNames, setCharacterNames] = useState(
-    JSON.parse(localStorage.getItem("character_names")) || []
-  );
-  const [characterColor, setCharacterColor] = useState("#daf8e3"); 
+  const [colorTheme, setColorTheme] = useState("#daf8e3"); 
   const [currentCharacter, setCurrentCharacter] = useState("Magical Kite");
   const [resumedChatGroupId, setResumedChatGroupId] = useState(
     localStorage.getItem("chat_group_id") || ""
@@ -19,8 +17,7 @@ const Home = () => {
   const [chatGroupsData, setChatGroupsData] = useState([]);
   const [chatGroupTranscript, setChatGroupTranscript] = useState([]);
   
-  const [popoverVisible, setPopoverVisible] = useState(false);
-  const [popoverTarget, setPopoverTarget] = useState(null);
+  const [selectedChat, setSelectedChat] = useState(false);
 
   const [storySlidesOpen, setStorySlidesOpen] = useState(false);
 
@@ -51,11 +48,19 @@ const Home = () => {
         );
         const body = await response.json();
 
-        const chatGroupsData = body.chat_groups_page.map((group) => ({
-          id: group.id,
-          timestamp: group.first_start_timestamp,
-          label: `${formatTimestamp(group.first_start_timestamp)}`,
-        }));
+        const chatGroupsData = body.chat_groups_page.map((group) => {
+          const storedName = localStorage.getItem(
+            `chat_group_name_${group.id}`
+          );
+          return {
+            id: group.id,
+            timestamp: group.first_start_timestamp,
+            label:
+              storedName && storedName !== ""
+                ? storedName
+                : `${formatTimestamp(group.first_start_timestamp)}`,
+          };
+        });
 
         setChatGroupsData(chatGroupsData);
       } catch (error) {
@@ -63,14 +68,33 @@ const Home = () => {
       }
     };
     fetchChatGroups();
-  }, []);
+  }, [resumedChatGroupId]);
+
+  useEffect(() => {
+    const changeColorToolName = "change_color";
+    const changeColorToolParameters =
+      '{"type": "object", "required": [], "properties": {"color": {"type": "string", "description": "The color to change into in hex code (e.g. #e6d7ff)"}}}';
+    const changeColorToolDescription =
+      "This tool is invoked when the user requests to change the color theme.";
+    const changeColorToolFallbackContent =
+      "Experiencing some difficulties trying to change the color.";
+    createToolIfNotExists(
+      changeColorToolName,
+      changeColorToolParameters,
+      changeColorToolDescription,
+      changeColorToolFallbackContent
+    );
+  }, [])
 
   const handleChatSelect = async (key, event) => {
     if (key === "story") {
       setStorySlidesOpen(true);
+    } else if (key === "Start new chat") {
+      setSelectedChat(true);
+      setResumedChatGroupId("")
+      setChatGroupTranscript([]);
     } else {
-      setPopoverVisible(true);
-      setPopoverTarget(event.currentTarget);
+      setSelectedChat(true);
       setResumedChatGroupId(key);
     }
   };
@@ -79,11 +103,15 @@ const Home = () => {
     if (resumedChatGroupId) {
       fetchChatGroupTranscript();
     }
-  }, [resumedChatGroupId]);
+  }, [resumedChatGroupId, selectedChat]);
 
   const fetchChatGroupTranscript = async () => {
+    if (resumedChatGroupId === "") {
+      setChatGroupTranscript([]);
+      return;
+    }
+
     try {
-      // List chat events from a specific chat_group (GET /v0/evi/chat_groups/:id/events)
       const response = await fetch(
         `https://api.hume.ai/v0/evi/chat_groups/${resumedChatGroupId}/events?ascending_order=false&page_size=10&page_number=0`,
         {
@@ -93,7 +121,14 @@ const Home = () => {
           },
         }
       );
+
       const body = await response.json();
+
+      if (!body.events_page) {
+        console.warn("No events_page in response body");
+        setChatGroupTranscript([]);
+        return;
+      }
 
       const chatGroupTranscriptData = body.events_page
         .map((msg) => ({
@@ -106,13 +141,11 @@ const Home = () => {
 
       setChatGroupTranscript(chatGroupTranscriptData);
     } catch (error) {
-        console.error("Error fetching chat group transcript data:", error);
-      }
-  }
+      console.error("Error fetching chat group transcript data:", error);
+    }
+  };
 
   const handleCloseStorySlides = () => setStorySlidesOpen(false);
-
-  const handleHidePopover = () => setPopoverVisible(false);
 
   const handleWebSocketMessageEvent = async (message) => {
     console.log("WebSocket message received:", message);
@@ -124,15 +157,13 @@ const Home = () => {
 
   const handleToolCall = async (toolCall) => {
     console.log("Tool call received", toolCall);
-    if (toolCall.name === 'change_character'){
+    if (toolCall.name === 'change_color'){
       try {
         const args = JSON.parse(toolCall.parameters);
-        if (args && args.name && args.color){
-          console.log(`Changed to ${args.name}.`);
+        if (args && args.color){
           console.log(`Color ${args.color}.`);
           const lighterColor = lightenColor(args.color, 60);
-          setCharacterColor(lighterColor);
-          setCurrentCharacter(args.name);
+          setColorTheme(lighterColor);
           return {
             type: "tool_response",
             tool_call_id: toolCall.tool_call_id,
@@ -151,52 +182,6 @@ const Home = () => {
         };
       }
     }
-
-    if (toolCall.name === 'save_character' && currentUser) {
-      try {
-        const args = JSON.parse(toolCall.parameters);
-        if (args && args.name){
-          const userChatDoc = doc(db, "users", currentUser.uid);
-          await setDoc(userChatDoc,
-            { character_names: arrayUnion(args.name) },
-            { merge: true }
-          );
-          setCharacterNames((prevNames) => {
-            if (prevNames && !prevNames.includes(args.name)) {
-              return [...prevNames, args.name];
-            } else if (!prevNames.includes(args.name)) {
-              return [args.name];
-            }
-            return prevNames;
-          });
-          console.log(`Character name ${args.name} saved successfully.`);
-          return {
-            type: "tool_response",
-            tool_call_id: toolCall.tool_call_id,
-            content: JSON.stringify({ success: true }),
-          };
-        }
-      } catch (error) {
-        console.error("Error saving character name:", error);
-        return {
-          type: "tool_error",
-          tool_call_id: toolCall.tool_call_id,
-          error: "Character save error",
-          code: "character_save_error",
-          level: "warn",
-          content: "The kite is glitching, and lost its ability to save characters.",
-        };
-      }
-    } else {
-      return {
-        type: "tool_error",
-        tool_call_id: toolCall.tool_call_id,
-        error: "Attempting to save a character while signed out",
-        code: "attempt_save_while_signed_out",
-        level: "warn",
-        content: "You must login to save a character to memory.",
-      };
-    }
   };
 
   return (
@@ -212,17 +197,14 @@ const Home = () => {
           <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-auto">
             <ChatStage
               className="pointer-events-auto"
-              characterNames={characterNames}
-              characterColor={characterColor}
+              colorTheme={colorTheme}
               currentCharacter={currentCharacter}
               chatGroupsData={chatGroupsData}
               handleChatSelect={handleChatSelect}
               handleCloseStorySlides={handleCloseStorySlides}
-              handleHidePopover={handleHidePopover}
               storySlidesOpen={storySlidesOpen}
-              setPopoverVisible={setPopoverVisible}
-              popoverVisible={popoverVisible}
-              popoverTarget={popoverTarget}
+              setSelectedChat={setSelectedChat}
+              selectedChat={selectedChat}
               chatGroupTranscript={chatGroupTranscript}
             />
           </div>

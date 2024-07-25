@@ -1,5 +1,5 @@
 import { Menu } from "antd";
-import { BookOutlined, BarsOutlined } from "@ant-design/icons";
+import { BookOutlined, BarsOutlined, CommentOutlined } from "@ant-design/icons";
 
 const MenuList = ({
   darkTheme,
@@ -18,15 +18,20 @@ const MenuList = ({
 
   const menuItems = [
     {
-      label: "Story",
-      key: "story",
-      icon: <BookOutlined />,
+      label: "Start new chat",
+      key: "Start new chat",
+      icon: <CommentOutlined />,
     },
     {
       label: "Chats",
       key: "chats",
       icon: <BarsOutlined />,
       children: chatGroupItems,
+    },
+    {
+      label: "Story",
+      key: "story",
+      icon: <BookOutlined />,
     },
   ];
 

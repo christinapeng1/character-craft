@@ -16,65 +16,30 @@ const { Header, Sider } = Layout;
 
 const ChatScreen = ({
   characterNames,
-  characterColor,
+  colorTheme,
   currentCharacter,
   colorBgContainer,
   chatGroupsData,
   handleChatSelect,
   storySlidesOpen,
   handleCloseStorySlides,
-  handleHidePopover,
-  setPopoverVisible,
-  popoverVisible,
-  popoverTarget,
+  setSelectedChat,
+  selectedChat,
   chatGroupTranscript,
   handleLeaveChatStage,
+  setNewChat,
+  newChat,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [darkTheme, setDarkTheme] = useState(true);
-  const { connect, disconnect, status, sendUserInput, clearMessages } =
-    useVoice();
 
   const toggleTheme = () => setDarkTheme(!darkTheme);
 
   const handleToggleClick = () => setCollapsed(!collapsed);
 
-  useEffect(() => {
-    if (popoverVisible) {
-      disconnect();
-      clearMessages();
-    }
-  }, [popoverVisible]);
-
-  const handleOpenChatGroup = async () => {
-    connect().then(() => {
-      sendUserInput("Continue where we left off");
-      setPopoverVisible(false);
-    });
-  };
-
   return (
     <React.Fragment>
       <StorySlideshow open={storySlidesOpen} onClose={handleCloseStorySlides} />
-      <Popover
-        open={popoverVisible}
-        anchorEl={popoverTarget}
-        onClose={handleHidePopover}
-        anchorOrigin={{
-          vertical: "center",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "center",
-          horizontal: "left",
-        }}
-      >
-        <div>
-          <Button type="primary" onClick={handleOpenChatGroup}>
-            Open
-          </Button>
-        </div>
-      </Popover>
       <ToggleThemeButton darkTheme={darkTheme} togglTheme={toggleTheme} />
       <div className="sidebar-wrapper pointer-events-auto">
         <Layout>
@@ -116,14 +81,21 @@ const ChatScreen = ({
       </div>
       <div className="chat-wrapper">
         <Messages
-          characterColor={characterColor}
+          colorTheme={colorTheme}
           chatGroupTranscript={chatGroupTranscript}
+          setNewChat={setNewChat}
+          newChat={newChat}
         />
       </div>
       <div className="foxcanvas-wrapper pointer-events-auto">
         <FoxCanvas />
       </div>
-      <Controls color={characterColor} currentCharacter={currentCharacter} />
+      <Controls
+        color={colorTheme}
+        currentCharacter={currentCharacter}
+        selectedChat={selectedChat}
+        setSelectedChat={setSelectedChat}
+      />
     </React.Fragment>
   );
 };
