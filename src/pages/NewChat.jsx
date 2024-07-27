@@ -115,7 +115,7 @@ const NewChat = () => {
 
     try {
       const response = await fetch(
-        `https://api.hume.ai/v0/evi/chat_groups/${chatGroupId}/events?ascending_order=false&page_size=10&page_number=0`,
+        `https://api.hume.ai/v0/evi/chat_groups/${chatGroupId}/events?ascending_order=false&page_size=20&page_number=0`,
         {
           method: "GET",
           headers: {
@@ -184,6 +184,8 @@ const NewChat = () => {
       <>
         <VoiceProvider
           auth={{ type: "accessToken", value: accessToken }}
+          onMessage={(message) => console.log(message)}
+          onError={(error) => console.error(error)}
           onToolCall={handleToolCall}
           resumedChatGroupId={chatGroupId}
         >

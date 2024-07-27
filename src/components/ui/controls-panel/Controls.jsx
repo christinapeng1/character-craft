@@ -25,7 +25,7 @@ const Controls = ({
 }) => {
   return (
     <div className="controls-container">
-      <div className="currently-speaking">Current Speaker:</div>
+      <div className="currently-speaking">Current Chat:</div>
       <div className="currently-speaking-character">{currentCharacter}</div>
       <div className="waveform-container">
         <Waveform message={lastVoiceMessage} />

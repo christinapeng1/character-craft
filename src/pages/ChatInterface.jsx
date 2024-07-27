@@ -25,13 +25,10 @@ const Chat = ({
   handleCloseStorySlides,
   currentChat,
   chatGroupTranscript,
-  handleLeaveChatStage,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [darkTheme, setDarkTheme] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
-  const [isMicMuted, setIsMicMuted] = useState(false);
-  const [isAudioMuted, setIsAudioMuted] = useState(false);
   const {
     sendPauseAssistantMessage,
     sendResumeAssistantMessage,
@@ -45,6 +42,8 @@ const Chat = ({
     connect,
     disconnect,
     status,
+    isMuted,
+    isAudioMuted
   } = useVoice();
   const navigate = useNavigate();
 
@@ -85,22 +84,18 @@ const Chat = ({
   };
 
   const handleMuteMic = () => {
-    if (isMicMuted) {
+    if (isMuted) {
       unmute();
-      setIsMicMuted(false);
     } else {
       mute();
-      setIsMicMuted(true);
     }
   };
 
   const handleMuteAudio = () => {
     if (isAudioMuted) {
       unmuteAudio();
-      setIsAudioMuted(false);
     } else {
       muteAudio();
-      setIsAudioMuted(true);
     }
   };
 
@@ -174,7 +169,7 @@ const Chat = ({
         handleMuteAudio={handleMuteAudio}
         isPaused={isPaused}
         isDisabled={isDisabled}
-        isMicMuted={isMicMuted}
+        isMicMuted={isMuted}
         isAudioMuted={isAudioMuted}
       />
     </React.Fragment>
