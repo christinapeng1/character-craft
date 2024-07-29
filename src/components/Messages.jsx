@@ -69,6 +69,9 @@ const Messages = ({ colorTheme, chatGroupTranscript }) => {
         {chatGroupTranscript &&
           chatGroupTranscript.map((msg, index) => {
             if (msg.type === "USER_MESSAGE") {
+              if (msg.content.trim().startsWith("CONTINUE_MESSAGE:")) {
+                return null; // Skip rendering this message
+              }
               return (
                 <div
                   key={`past-user-${index}`}

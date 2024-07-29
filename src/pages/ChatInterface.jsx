@@ -17,7 +17,7 @@ const { Header, Sider } = Layout;
 const Chat = ({
   characterNames,
   colorTheme,
-  currentCharacter,
+  currentChatLabel,
   colorBgContainer,
   chatGroupsData,
   handleChatSelect,
@@ -25,6 +25,10 @@ const Chat = ({
   handleCloseStorySlides,
   currentChat,
   chatGroupTranscript,
+  handleRenameClick,
+  isRenamingChat,
+  handleRenameInputChange,
+  handleRenameKeyDown,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [darkTheme, setDarkTheme] = useState(true);
@@ -43,7 +47,7 @@ const Chat = ({
     disconnect,
     status,
     isMuted,
-    isAudioMuted
+    isAudioMuted,
   } = useVoice();
   const navigate = useNavigate();
 
@@ -52,7 +56,7 @@ const Chat = ({
   };
 
   useEffect(() => {
-    if (status.value === "connected"){
+    if (status.value === "connected") {
       disconnect();
       clearMessages();
     }
@@ -160,7 +164,7 @@ const Chat = ({
       </div>
       <Controls
         color={colorTheme}
-        currentCharacter={currentCharacter}
+        currentChatLabel={currentChatLabel}
         handleConnectChatGroup={handleConnectChatGroup}
         lastVoiceMessage={lastVoiceMessage}
         status={status}
@@ -171,6 +175,10 @@ const Chat = ({
         isDisabled={isDisabled}
         isMicMuted={isMuted}
         isAudioMuted={isAudioMuted}
+        handleRenameClick={handleRenameClick}
+        isRenamingChat={isRenamingChat}
+        handleRenameInputChange={handleRenameInputChange}
+        handleRenameKeyDown={handleRenameKeyDown}
       />
     </React.Fragment>
   );

@@ -14,13 +14,16 @@ const NewChat = () => {
 
   const [accessToken, setAccessToken] = useState("");
   const [colorTheme, setColorTheme] = useState("#daf8e3");
-  const [currentCharacter, setCurrentCharacter] = useState("Magical Kite");
+  const [currentChatLabel, setCurrentChatLabel] = useState(
+    localStorage.getItem(`chat_group_name_${chatGroupId}`) || "Unnamed Chat"
+  );
   const [chatGroupsData, setChatGroupsData] = useState([]);
   const [chatGroupTranscript, setChatGroupTranscript] = useState([]);
 
   const [currentChat, setCurrentChat] = useState("");
 
   const [storySlidesOpen, setStorySlidesOpen] = useState(false);
+  const [isRenamingChat, setIsRenamingChat] = useState(false);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -104,6 +107,11 @@ const NewChat = () => {
   useEffect(() => {
     if (chatGroupId) {
       fetchChatGroupTranscript();
+      setCurrentChatLabel(
+        localStorage.getItem(`chat_group_name_${chatGroupId}`) || "Unnamed Chat"
+      );
+    } else {
+      setCurrentChatLabel("New Chat");
     }
   }, [chatGroupId, currentChat]);
 
@@ -179,6 +187,21 @@ const NewChat = () => {
     }
   };
 
+  const handleRenameClick = () => setIsRenamingChat(true);
+  
+  const handleRenameInputChange = (e) => setCurrentChatLabel(e.target.value);
+
+  const handleRenameKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleRename();
+    }
+  };
+
+  const handleRename = () => {
+    localStorage.setItem(`chat_group_name_${chatGroupId}`, currentChatLabel);
+    setIsRenamingChat(false);
+  }
+
   return (
     <section className="w-full h-screen relative">
       <>
@@ -193,13 +216,17 @@ const NewChat = () => {
             <ChatInterface
               className="pointer-events-auto"
               colorTheme={colorTheme}
-              currentCharacter={currentCharacter}
+              currentChatLabel={currentChatLabel}
               chatGroupsData={chatGroupsData}
               handleChatSelect={handleChatSelect}
               handleCloseStorySlides={handleCloseStorySlides}
               storySlidesOpen={storySlidesOpen}
               currentChat={currentChat}
               chatGroupTranscript={chatGroupTranscript}
+              handleRenameClick={handleRenameClick}
+              isRenamingChat={isRenamingChat}
+              handleRenameInputChange={handleRenameInputChange}
+              handleRenameKeyDown={handleRenameKeyDown}
             />
           </div>
         </VoiceProvider>

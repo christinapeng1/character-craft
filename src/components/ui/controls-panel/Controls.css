@@ -82,13 +82,31 @@
   left: 20px;
 }
 
-.currently-speaking {
-  font-size: 18px;
-  margin-bottom: 10px;
+.active-chat-name {
+  transition: all 0.3s ease;
+  font-size: 20px; /* Larger font size */
+  font-weight: 500;
+  font-family: 'Quicksand';
 }
 
-.currently-speaking-character {
-  font-size: 18px;
-  padding: 5px 10px;
-  border-radius: 5px;
+.active-chat-name-container {
+  display: flex;
+  align-items: center;
+}
+
+.renaming-container {
+  display: flex;
+  align-items: center;
+}
+
+.edit-note-icon {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #a43309;
+}
+
+.edit-note-icon:hover {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #832702;;
 }
