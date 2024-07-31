@@ -19,7 +19,7 @@
 }
 
 .about-container * {
-  pointer-events: auto; /* Re-enable pointer events for all child elements */
+  pointer-events: auto;
 }
 
 .sidebar-wrapper {
@@ -53,7 +53,7 @@
 
 .placeholder {
   height: 5vh;
-  visibility: hidden; /* Keeps space but hides the content */
+  visibility: hidden;
 }
 
 .kitecanvas-wrapper {
@@ -145,8 +145,8 @@
   display: flex;
   flex-direction: column;
   position: fixed;
-  justify-content: space-between; /* Ensures input-container stays at the bottom */
-  overflow: auto; /* Prevent content from overflowing */
+  justify-content: space-between;
+  overflow: auto;
 }
 
 .chat-container {
@@ -201,7 +201,7 @@
   font-family: "Quicksand", sans-serif;
   font-size: 120%;
   max-width: 90%;
-  word-break: break-word; /* Ensure long words are broken */
+  word-break: break-word;
   white-space: pre-wrap;
 }
 
@@ -269,8 +269,8 @@
 }
 
 .input-box::placeholder {
-  color: rgba(88, 87, 87, 0.765); /* Darker placeholder color */
-  opacity: 1; /* Ensures the color is applied correctly across browsers */
+  color: rgba(88, 87, 87, 0.765);
+  opacity: 1; 
 }
 
 .send-button {

@@ -1,3 +1,9 @@
+/**
+ * Formats a timestamp into a human-readable date and time string.
+ * @param timestamp - The timestamp to format.
+ * @returns The formatted date and time string.
+ */
+
 export const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
   const formattedDate = date.toLocaleDateString("en-US", {

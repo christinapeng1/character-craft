@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchAccessToken } from "hume";
 import { VoiceProvider } from "@humeai/voice-react";
-import ChatInterface from "./ChatInterface.jsx";
-import { formatTimestamp } from "../utils/formatTimestamp.ts";
-import handleToolCall from "./handleToolCall";
-import "./Home.css";
+import ChatInterface from "../../components/ChatInterface.jsx";
+import { formatTimestamp } from "../../utils/formatTimestamp.ts";
+import handleToolCall from "./handleToolCall.ts";
+import "../pages.css";
 
 const NewChat = () => {
+  // Get the chatGroupId from the URL parameters
   const { chatGroupId } = useParams();
   const navigate = useNavigate();
 
@@ -18,10 +19,8 @@ const NewChat = () => {
   const [currentChatLabel, setCurrentChatLabel] = useState(
     localStorage.getItem(`chat_group_name_${chatGroupId}`) || "Unnamed Chat"
   );
-
   const [aboutOpen, setAboutOpen] = useState(false);
   const [isRenamingChat, setIsRenamingChat] = useState(false);
-  
   const [assistantColorTheme, setAssistantColorTheme] = useState(
     localStorage.getItem("assistant_color_theme" || "#daf8e3")
   );
@@ -29,6 +28,7 @@ const NewChat = () => {
     localStorage.getItem("user_color_theme" || "#f8d7da")
   );
 
+  // Fetch the access token on component mount
   useEffect(() => {
     const fetchToken = async () => {
       // make sure to set these environment variables
@@ -42,7 +42,7 @@ const NewChat = () => {
     fetchToken();
   }, []);
 
-  //fetch the most recent 10 chat groups
+  // Fetch the most recent 10 chat groups on component mount and when chatGroupId changes
   useEffect(() => {
     const fetchChatGroups = async () => {
       try {
@@ -79,6 +79,7 @@ const NewChat = () => {
     fetchChatGroups();
   }, [chatGroupId]);
 
+  // Handle chat selection
   const handleChatSelect = async (key) => {
     if (key === "about") {
       setAboutOpen(true);
@@ -92,6 +93,7 @@ const NewChat = () => {
     }
   };
 
+  // Fetch chat group transcript when chatGroupId or currentChat changes
   useEffect(() => {
     if (chatGroupId) {
       fetchChatGroupTranscript();
@@ -103,6 +105,7 @@ const NewChat = () => {
     }
   }, [chatGroupId, currentChat]);
 
+  // Fetch chat group transcript data
   const fetchChatGroupTranscript = async () => {
     if (!chatGroupId) {
       setChatGroupTranscript([]);
@@ -143,23 +146,29 @@ const NewChat = () => {
     }
   };
 
-  const handleCloseStorySlides = () => setAboutOpen(false);
+  // Handle closing about modal
+  const handleCloseAbout = () => setAboutOpen(false);
 
+  // Handle chat rename click
   const handleRenameClick = () => setIsRenamingChat(true);
   
+  // Handle chat rename input change
   const handleRenameInputChange = (e) => setCurrentChatLabel(e.target.value);
 
+  // Handle chat rename key down
   const handleRenameKeyDown = (e) => {
     if (e.key === "Enter") {
       handleRename();
     }
   };
 
+  // Handle chat rename
   const handleRename = () => {
     localStorage.setItem(`chat_group_name_${chatGroupId}`, currentChatLabel);
     setIsRenamingChat(false);
   }
 
+  // Render the NewChat component
   return (
     <section className="w-full h-screen relative">
       <>
@@ -178,7 +187,7 @@ const NewChat = () => {
               currentChatLabel={currentChatLabel}
               chatGroupsData={chatGroupsData}
               handleChatSelect={handleChatSelect}
-              handleCloseStorySlides={handleCloseStorySlides}
+              handleCloseAbout={handleCloseAbout}
               aboutOpen={aboutOpen}
               currentChat={currentChat}
               chatGroupTranscript={chatGroupTranscript}

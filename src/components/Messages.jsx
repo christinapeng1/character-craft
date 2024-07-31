@@ -15,7 +15,6 @@ const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) 
     useState(null);
   const assistantBorderColor = darkenColor(assistantColorTheme, 15);
   const userBorderColor = darkenColor(userColorTheme, 15);
-  
 
   const scrollToBottom = () => {
     if (chatEndRef.current) {
@@ -41,7 +40,6 @@ const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) 
         }
       } catch (error) {
         console.error("Error sending message:", error);
-        // Optionally, you can add some user feedback here
       }
     }
   };
@@ -122,7 +120,7 @@ const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) 
                   className="user-message message"
                   style={{
                     backgroundColor: userColorTheme,
-                    border: "2px solid " + userBorderColor, // Corrected the border style
+                    border: "2px solid " + userBorderColor,
                   }}
                 >
                   <div className="content">{msg.message.content}</div>
@@ -179,7 +177,7 @@ const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) 
                   className="assistant-message message"
                   style={{
                     backgroundColor: assistantColorTheme,
-                    border: "2px solid " + assistantBorderColor, // Corrected the border style
+                    border: "2px solid " + assistantBorderColor,
                   }}
                 >
                   <div className="content">{msg.message.content}</div>

@@ -1,5 +1,10 @@
-import tinycolor from "tinycolor2";
-
+/**
+ * Returns the top N prosody scores from a given record of scores.
+ *
+ * @param scores - The record of scores.
+ * @param n - The number of top scores to return. Defaults to 3.
+ * @returns An array of objects containing the name and score of the top N prosody scores.
+ */
 export function getTopNProsody(scores: Record<string, number>, n = 3) {
   return Object.entries(scores)
     .sort((a, b) => b[1] - a[1])
@@ -9,30 +14,3 @@ export function getTopNProsody(scores: Record<string, number>, n = 3) {
       return { ...entry, score: Number(entry.score).toFixed(3) };
     });
 }
-
-export const lightenColor = (hex, percentage) => {
-  // Ensure the hex code is valid
-  const color = tinycolor(hex);
-  if (!color) {
-    throw new Error("Invalid hex color code");
-  }
-
-  // Check if the color is dark
-  if (color.isDark()) {
-    // Lighten the color if it is dark
-    return color.lighten(percentage).toString();
-  }
-
-  // Return the original color if it is not dark
-  return color.toString();
-};
-
-export const darkenColor = (hex, percentage) => {
-  // Ensure the hex code is valid
-  const color = tinycolor(hex);
-  if (!color) {
-    throw new Error("Invalid hex color code");
-  }
-
-  return color.darken(percentage).toString();
-};

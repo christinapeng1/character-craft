@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useVoice } from "@humeai/voice-react";
-import sessionSettings from "./sessionSettings";
+import sessionSettings from "../pages/chat/sessionSettings";
 import { useNavigate } from "react-router-dom";
 import { Layout, Button } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import ToggleThemeButton from "../components/buttons/ToggleThemeButton";
-import DisconnectButton from "../components/buttons/DisconnectButton";
-import StorySlideshow from "../components/About";
-import MenuList from "../components/MenuList";
-import Messages from "../components/Messages";
-import FoxCanvas from "../components/3d-canvas/FoxCanvas";
-import Controls from "../components/controls-panel/Controls";
-import "../pages/Home.css";
+import ToggleThemeButton from "./buttons/ToggleThemeButton";
+import DisconnectButton from "./buttons/DisconnectButton";
+import About from "./About";
+import MenuList from "./MenuList";
+import Messages from "./Messages";
+import FoxCanvas from "./3d-canvas/FoxCanvas";
+import Controls from "./controls-panel/Controls";
+import "../pages/pages.css";
 
 const { Header, Sider } = Layout;
 
@@ -23,7 +23,7 @@ const ChatInterface = ({
   chatGroupsData,
   handleChatSelect,
   aboutOpen,
-  handleCloseStorySlides,
+  handleCloseAbout,
   currentChat,
   chatGroupTranscript,
   handleRenameClick,
@@ -31,6 +31,7 @@ const ChatInterface = ({
   handleRenameInputChange,
   handleRenameKeyDown,
 }) => {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [darkTheme, setDarkTheme] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
@@ -51,20 +52,22 @@ const ChatInterface = ({
     isMuted,
     isAudioMuted,
   } = useVoice();
-  const navigate = useNavigate();
 
+  // Handle navigation to home page
   const handleNavigateHome = () => {
     disconnect();
     navigate("/");
   };
 
   useEffect(() => {
+    // Disconnect and clear messages when currentChat changes
     if (status.value === "connected") {
       disconnect();
       clearMessages();
     }
   }, [currentChat]);
 
+  // Handle connecting to chat group
   const handleConnectChatGroup = async () => {
     if (status.value === "disconnected") {
       connect().then(() => {
@@ -79,6 +82,7 @@ const ChatInterface = ({
     }
   };
 
+  // Handle pausing/resuming assistant
   const handlePause = () => {
     if (isPaused) {
       sendResumeAssistantMessage();
@@ -93,6 +97,7 @@ const ChatInterface = ({
     }
   };
 
+  // Handle muting/unmuting microphone
   const handleMuteMic = () => {
     if (isMuted) {
       unmute();
@@ -101,6 +106,7 @@ const ChatInterface = ({
     }
   };
 
+  // Handle muting/unmuting audio
   const handleMuteAudio = () => {
     if (isAudioMuted) {
       unmuteAudio();
@@ -109,17 +115,20 @@ const ChatInterface = ({
     }
   };
 
-  const isDisabled = status.value === "disconnected" || isPaused;
-
+  // Handle changing color theme
   const handleChangeColor = () => sendUserInput("Change the color theme to a random color.");
 
+  // Toggle dark theme for the menu
   const toggleTheme = () => setDarkTheme(!darkTheme);
 
+  // Handle toggle click for the menu
   const handleToggleClick = () => setCollapsed(!collapsed);
+
+  const isDisabled = status.value === "disconnected" || isPaused;
 
   return (
     <React.Fragment>
-      <StorySlideshow open={aboutOpen} onClose={handleCloseStorySlides} />
+      <About open={aboutOpen} onClose={handleCloseAbout} />
       <ToggleThemeButton darkTheme={darkTheme} togglTheme={toggleTheme} />
       <div className="sidebar-wrapper pointer-events-auto">
         <Layout>

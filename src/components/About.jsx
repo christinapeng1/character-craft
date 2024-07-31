@@ -1,9 +1,8 @@
 import React from "react";
-import Slider from "react-slick";
 import { Box, Typography, Dialog, DialogContent } from "@mui/material";
 import characters from "../assets/img/characters.webp";
 
-const StorySlideshow = ({ open, onClose }) => {
+const About = ({ open, onClose }) => {
 
   return (
     <Dialog
@@ -93,4 +92,4 @@ const StorySlideshow = ({ open, onClose }) => {
   );
 };
 
-export default StorySlideshow;
+export default About;

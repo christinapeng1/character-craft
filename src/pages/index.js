@@ -1,6 +1,5 @@
 // import Home from './home/Home';
-import Home from './Home';
-import NewChat from './NewChat'
-import ChatInterface from './ChatInterface'
+import Home from './home/Home';
+import NewChat from './chat/NewChat';
 
-export { Home, NewChat, ChatInterface };
+export { Home, NewChat };

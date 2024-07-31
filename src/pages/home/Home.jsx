@@ -1,10 +1,9 @@
 import React from "react";
-import KiteCanvas from "../components/3d-canvas/KiteCanvas";
-import "./Home.css"
+import KiteCanvas from "../../components/3d-canvas/KiteCanvas";
+import "../pages.css"
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-
   const navigate = useNavigate();
 
   const handleNavigateToNewChat = () => {
