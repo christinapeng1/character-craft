@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchAccessToken } from "hume";
 import { VoiceProvider } from "@humeai/voice-react";
-import { lightenColor } from "../utils/adjustColor.ts";
 import ChatInterface from "./ChatInterface.jsx";
 import { formatTimestamp } from "../utils/formatTimestamp.ts";
-import { createToolIfNotExists } from "../utils/createTool.ts";
+import handleToolCall from "./handleToolCall";
 import "./Home.css";
 
 const NewChat = () => {
@@ -13,17 +12,22 @@ const NewChat = () => {
   const navigate = useNavigate();
 
   const [accessToken, setAccessToken] = useState("");
-  const [colorTheme, setColorTheme] = useState("#daf8e3");
+  const [chatGroupsData, setChatGroupsData] = useState([]);
+  const [chatGroupTranscript, setChatGroupTranscript] = useState([]);
+  const [currentChat, setCurrentChat] = useState("");
   const [currentChatLabel, setCurrentChatLabel] = useState(
     localStorage.getItem(`chat_group_name_${chatGroupId}`) || "Unnamed Chat"
   );
-  const [chatGroupsData, setChatGroupsData] = useState([]);
-  const [chatGroupTranscript, setChatGroupTranscript] = useState([]);
 
-  const [currentChat, setCurrentChat] = useState("");
-
-  const [storySlidesOpen, setStorySlidesOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [isRenamingChat, setIsRenamingChat] = useState(false);
+  
+  const [assistantColorTheme, setAssistantColorTheme] = useState(
+    localStorage.getItem("assistant_color_theme" || "#daf8e3")
+  );
+  const [userColorTheme, setUserColorTheme] = useState(
+    localStorage.getItem("user_color_theme" || "#f8d7da")
+  );
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -75,25 +79,9 @@ const NewChat = () => {
     fetchChatGroups();
   }, [chatGroupId]);
 
-  useEffect(() => {
-    const changeColorToolName = "change_color";
-    const changeColorToolParameters =
-      '{"type": "object", "required": [], "properties": {"color": {"type": "string", "description": "The color to change into in hex code (e.g. #e6d7ff)"}}}';
-    const changeColorToolDescription =
-      "This tool is invoked when the user requests to change the color theme.";
-    const changeColorToolFallbackContent =
-      "Experiencing some difficulties trying to change the color.";
-    createToolIfNotExists(
-      changeColorToolName,
-      changeColorToolParameters,
-      changeColorToolDescription,
-      changeColorToolFallbackContent
-    );
-  }, []);
-
   const handleChatSelect = async (key) => {
-    if (key === "story") {
-      setStorySlidesOpen(true);
+    if (key === "about") {
+      setAboutOpen(true);
     } else if (key === "Start new chat") {
       setCurrentChat("new");
       setChatGroupTranscript([]);
@@ -155,37 +143,7 @@ const NewChat = () => {
     }
   };
 
-  const handleCloseStorySlides = () => setStorySlidesOpen(false);
-
-  const handleToolCall = async (toolCall) => {
-    console.log("Tool call received", toolCall);
-    if (toolCall.name === "change_color") {
-      try {
-        const args = JSON.parse(toolCall.parameters);
-        if (args && args.color) {
-          console.log(`Color ${args.color}.`);
-          const lighterColor = lightenColor(args.color, 60);
-          setColorTheme(lighterColor);
-          return {
-            type: "tool_response",
-            tool_call_id: toolCall.tool_call_id,
-            content: JSON.stringify({ success: true }),
-          };
-        }
-      } catch (error) {
-        console.error("Error changing to a different character:", error);
-        return {
-          type: "tool_error",
-          tool_call_id: toolCall.tool_call_id,
-          error: "Character change error",
-          code: "character_change_error",
-          level: "warn",
-          content:
-            "The kite is glitching, and lost its ability to change characters.",
-        };
-      }
-    }
-  };
+  const handleCloseStorySlides = () => setAboutOpen(false);
 
   const handleRenameClick = () => setIsRenamingChat(true);
   
@@ -209,18 +167,19 @@ const NewChat = () => {
           auth={{ type: "accessToken", value: accessToken }}
           onMessage={(message) => console.log(message)}
           onError={(error) => console.error(error)}
-          onToolCall={handleToolCall}
+          onToolCall={(toolCall) => handleToolCall(toolCall, setAssistantColorTheme, setUserColorTheme)}
           resumedChatGroupId={chatGroupId}
         >
           <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-auto">
             <ChatInterface
               className="pointer-events-auto"
-              colorTheme={colorTheme}
+              assistantColorTheme={assistantColorTheme}
+              userColorTheme={userColorTheme}
               currentChatLabel={currentChatLabel}
               chatGroupsData={chatGroupsData}
               handleChatSelect={handleChatSelect}
               handleCloseStorySlides={handleCloseStorySlides}
-              storySlidesOpen={storySlidesOpen}
+              aboutOpen={aboutOpen}
               currentChat={currentChat}
               chatGroupTranscript={chatGroupTranscript}
               handleRenameClick={handleRenameClick}

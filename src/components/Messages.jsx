@@ -6,14 +6,16 @@ import { expressionColors } from "expression-colors";
 import { getTopNProsody } from "../utils/getTopNProsody";
 import Tooltip from "@mui/material/Tooltip";
 
-const Messages = ({ colorTheme, chatGroupTranscript }) => {
+const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) => {
   const { connect, messages, sendUserInput, status } = useVoice();
   const chatEndRef = useRef(null);
   const [userInput, setUserInput] = useState("");
   const [clickedUserEmotionIndex, setClickedUserEmotionIndex] = useState(null);
   const [clickedAssistantEmotionIndex, setClickedAssistantEmotionIndex] =
     useState(null);
-  const assistantBorderColor = darkenColor(colorTheme, 15);
+  const assistantBorderColor = darkenColor(assistantColorTheme, 15);
+  const userBorderColor = darkenColor(userColorTheme, 15);
+  
 
   const scrollToBottom = () => {
     if (chatEndRef.current) {
@@ -69,13 +71,17 @@ const Messages = ({ colorTheme, chatGroupTranscript }) => {
         {chatGroupTranscript &&
           chatGroupTranscript.map((msg, index) => {
             if (msg.type === "USER_MESSAGE") {
-              if (msg.content.trim().startsWith("CONTINUE_MESSAGE:")) {
+              if (msg.content.trim().startsWith("BEGIN_MESSAGE:")) {
                 return null; // Skip rendering this message
               }
               return (
                 <div
                   key={`past-user-${index}`}
                   className="user-message message"
+                  style={{
+                    backgroundColor: userColorTheme,
+                    border: "2px solid " + userBorderColor,
+                  }}
                 >
                   <div className="content">{msg.content}</div>
                 </div>
@@ -87,7 +93,7 @@ const Messages = ({ colorTheme, chatGroupTranscript }) => {
                   key={`past-assistant-${index}`}
                   className="assistant-message message"
                   style={{
-                    backgroundColor: colorTheme,
+                    backgroundColor: assistantColorTheme,
                     border: "2px solid " + assistantBorderColor,
                   }}
                 >
@@ -105,13 +111,20 @@ const Messages = ({ colorTheme, chatGroupTranscript }) => {
               3
             );
             if (
-              msg.message.content.trim().startsWith("CONTINUE_MESSAGE:")
+              msg.message.content.trim().startsWith("BEGIN_MESSAGE:")
             ) {
               return null; // Skip rendering this message
             }
             return (
               <React.Fragment key={`user-message-${index}`}>
-                <div key={`user-${index}`} className="user-message message">
+                <div
+                  key={`user-${index}`}
+                  className="user-message message"
+                  style={{
+                    backgroundColor: userColorTheme,
+                    border: "2px solid " + userBorderColor, // Corrected the border style
+                  }}
+                >
                   <div className="content">{msg.message.content}</div>
                 </div>
                 {topUserEmotions.length > 0 && (
@@ -165,7 +178,7 @@ const Messages = ({ colorTheme, chatGroupTranscript }) => {
                   key={`assistant-${index}`}
                   className="assistant-message message"
                   style={{
-                    backgroundColor: colorTheme,
+                    backgroundColor: assistantColorTheme,
                     border: "2px solid " + assistantBorderColor, // Corrected the border style
                   }}
                 >

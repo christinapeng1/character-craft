@@ -76,7 +76,7 @@
 
 .title-text {
   margin-top: -50px;
-  font-size: 450%;
+  font-size: 600%;
   font-family: 'Mountains of Christmas';
   font-weight: 550;
   text-shadow: 3px 3px 1px #f9d78d;
@@ -84,7 +84,6 @@
 }
 
 .title-text:hover {
-  font-weight: 600;
   text-shadow: 4px 4px 1px #f9819d;
 }
 
@@ -123,9 +122,7 @@
   font-family: "Quicksand", sans-serif;
   background-color: #f9d78d;
   border-radius: 20px;
-  top: 30px;
-  padding: 0.5rem 1rem;
-  font-weight: bold;
+  padding: 0.1rem 0.5rem;
   border: 3px solid #f6bb3d;
   font-size: 100%;
   transition: background-color 0.3s ease, font-weight 0.3s ease, border 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease, color 0.3s ease;

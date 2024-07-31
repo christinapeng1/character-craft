@@ -29,8 +29,8 @@ const MenuList = ({
       children: chatGroupItems,
     },
     {
-      label: "Story",
-      key: "story",
+      label: "About",
+      key: "about",
       icon: <BookOutlined />,
     },
   ];

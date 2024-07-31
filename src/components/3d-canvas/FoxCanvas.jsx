@@ -4,7 +4,7 @@ import { OrbitControls } from "@react-three/drei";
 import { Color } from "three";
 import React, { useState, Suspense } from "react";
 import FloatingFox from "../../assets/models/floating-fox/FloatingFox";
-import Loader from "../ui/Loader";
+import Loader from "../Loader";
 
 const FoxCanvas = () => {
   const adjustFoxForScreenSize = () => {

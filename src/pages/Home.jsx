@@ -17,18 +17,16 @@ const Home = () => {
         <KiteCanvas />
       </div>
       <div className="about-container">
-        <h1 className="title-text">
-          Message in a Kite
-        </h1>
+        <h1 className="title-text">Writer's Cloud</h1>
         <h2 className="subtitle-text">
-          An interactive chat interface
+          Create your characters and{" "}
+          <button
+            onClick={handleNavigateToNewChat}
+            className="enter-chat-button"
+          >
+            start chatting
+          </button>
         </h2>
-        <button
-          onClick={handleNavigateToNewChat}
-          className="enter-chat-button"
-        >
-          follow the kites
-        </button>
       </div>
       <div className="gradient-bg w-full h-full absolute top-0 left-0 pointer-events-none"></div>
     </React.Fragment>

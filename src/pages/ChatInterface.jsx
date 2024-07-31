@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useVoice } from "@humeai/voice-react";
+import sessionSettings from "./sessionSettings";
 import { useNavigate } from "react-router-dom";
 import { Layout, Button } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import ToggleThemeButton from "../components/ui/toggle-theme/ToggleThemeButton";
-import DisconnectButton from "../components/ui/DisconnectButton";
-import StorySlideshow from "../components/ui/story-slideshow/StorySlideshow";
-import MenuList from "../components/ui/MenuList";
+import ToggleThemeButton from "../components/buttons/ToggleThemeButton";
+import DisconnectButton from "../components/buttons/DisconnectButton";
+import StorySlideshow from "../components/About";
+import MenuList from "../components/MenuList";
 import Messages from "../components/Messages";
 import FoxCanvas from "../components/3d-canvas/FoxCanvas";
-import Controls from "../components/ui/controls-panel/Controls";
+import Controls from "../components/controls-panel/Controls";
 import "../pages/Home.css";
 
 const { Header, Sider } = Layout;
 
-const Chat = ({
+const ChatInterface = ({
   characterNames,
-  colorTheme,
+  assistantColorTheme,
+  userColorTheme,
   currentChatLabel,
-  colorBgContainer,
   chatGroupsData,
   handleChatSelect,
-  storySlidesOpen,
+  aboutOpen,
   handleCloseStorySlides,
   currentChat,
   chatGroupTranscript,
@@ -36,6 +37,7 @@ const Chat = ({
   const {
     sendPauseAssistantMessage,
     sendResumeAssistantMessage,
+    sendSessionSettings,
     sendUserInput,
     mute,
     unmute,
@@ -52,6 +54,7 @@ const Chat = ({
   const navigate = useNavigate();
 
   const handleNavigateHome = () => {
+    disconnect();
     navigate("/");
   };
 
@@ -65,7 +68,10 @@ const Chat = ({
   const handleConnectChatGroup = async () => {
     if (status.value === "disconnected") {
       connect().then(() => {
-        sendUserInput("CONTINUE_MESSAGE: continue where we left off");
+        sendSessionSettings(sessionSettings);
+        sendUserInput(`BEGIN_MESSAGE: begin the conversation or continue where
+          you left off. Take into context the previous conversation and continue
+          your role as a writer's assistant, embodying the character the user is creating.`);
         setIsPaused(false);
       });
     } else {
@@ -105,7 +111,7 @@ const Chat = ({
 
   const isDisabled = status.value === "disconnected" || isPaused;
 
-  const handleChangeColor = () => sendUserInput("COLOR_THEME_CHANGE");
+  const handleChangeColor = () => sendUserInput("Change the color theme to a random color.");
 
   const toggleTheme = () => setDarkTheme(!darkTheme);
 
@@ -113,7 +119,7 @@ const Chat = ({
 
   return (
     <React.Fragment>
-      <StorySlideshow open={storySlidesOpen} onClose={handleCloseStorySlides} />
+      <StorySlideshow open={aboutOpen} onClose={handleCloseStorySlides} />
       <ToggleThemeButton darkTheme={darkTheme} togglTheme={toggleTheme} />
       <div className="sidebar-wrapper pointer-events-auto">
         <Layout>
@@ -142,7 +148,7 @@ const Chat = ({
             )}
           </Sider>
           <Layout>
-            <Header style={{ padding: 0, background: colorBgContainer }}>
+            <Header style={{ padding: 0 }}>
               <Button
                 type="text"
                 className="toggle pointer-events-auto"
@@ -155,7 +161,8 @@ const Chat = ({
       </div>
       <div className="chat-wrapper">
         <Messages
-          colorTheme={colorTheme}
+          assistantColorTheme={assistantColorTheme}
+          userColorTheme={userColorTheme}
           chatGroupTranscript={chatGroupTranscript}
         />
       </div>
@@ -163,7 +170,7 @@ const Chat = ({
         <FoxCanvas />
       </div>
       <Controls
-        color={colorTheme}
+        color={assistantColorTheme}
         currentChatLabel={currentChatLabel}
         handleConnectChatGroup={handleConnectChatGroup}
         lastVoiceMessage={lastVoiceMessage}
@@ -184,4 +191,4 @@ const Chat = ({
   );
 };
 
-export default Chat;
+export default ChatInterface;

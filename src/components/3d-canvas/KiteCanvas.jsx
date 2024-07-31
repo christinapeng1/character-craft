@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import Kite from "../../assets/models/kite-in-clouds/Kite";
-import Loader from "../ui/Loader";
+import Loader from "../Loader";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Color } from "three";
 import { OrbitControls } from "@react-three/drei";

@@ -10,19 +10,19 @@
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
   margin: 0 auto;
   right: 20px;
-  height: 68%;
+  height: 66%;
   width: 20%;
-  top: 30%;
+  top: 32%;
 }
 
 .waveform-container {
-  flex: 1; /* Takes up available space */
+  flex: 1;
   display: flex;
   position: relative;
   align-items: center;
   justify-content: center;
   width: 90%;
-  height: 50%;
+  height: 40%;
   top: 0;
 }
 
