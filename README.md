@@ -1,10 +1,11 @@
 <div align="center">
-  <h1>Writer's Cloud </h1>
+  <h1>Character Lab</h1>
 </div>
-Writer's Cloud is a writing assistant where you can create your own characters,
-give them personality traits and see them voiced and brought to life. 
+Character Lab is an interactive workshop space where writers can bring their
+characters to life and engage in conversations with them. Create unique characters,
+build their backstories, and explore their personalities through dynamic dialogues!
 
-[Video]
+[Video Showcase]
 
 ## Installation
 
@@ -43,6 +44,39 @@ Below are the steps to run the project locally:
 2. Run `pnpm build` to build the project.
 3. Run `pnpm dev` to serve the project at `localhost:5173`.
 
-## Usage
+## Features
+### Character Creation
+You are introduced to a writing assistant called Paige who starts as a blank slate character.
+You can customize Paige by giving them a name, age, gender, occupation, backstory, and more.
+Throughout the conversation, Paige will ask questions to help you brainstorm your character.
+Additionally, you can ask Paige for suggestions on what the character might do in
+certain scenarios to help fill in plot holes and develop your story idea.
 
+### Interactive Dialogue
+EVI, Hume AI's Empathic Voice Interface is used for dialogue.
+EVI is a voice assistant with emotional intelligence that can detect changes in
+emotions and embody the emotions of the character you are creating.
+It serves as a first-person embodiment of your character, allowing you to explore
+and workshop their personality.
+
+### Saved Conversation History
+Conversations are saved by fetching previous chat groups associated with your Hume API key.
+To resume a conversation, simply click on a previous chat group from the "Chats" tab.
+The associated `chat_group_id` will be provided as context in the VoiceProvider,
+informing EVI's dialogue and allowing it to remember details from previous conversations.
+You can also rename your previous conversations for easier association and reference.
+
+> ℹ️ Note
+> 
+> If your project is experiencing issues fetching previous conversation history,
+> you may have turned off data retention. If you'd like to save and
+> access your previous conversations, make sure you've allowed data retention
+> by going to the [Portal](https://platform.hume.ai/settings/profile).
+
+### Color Customization
+To make your workspace more fun and imaginative, you can customize the color of the interface.
+Click the "Change Color Theme" button or directly ask EVI to change the assistant message color,
+user message color, or entire color theme. Your selected color theme will be
+saved and retained the next time you run the project. This color customization is
+managed through EVI's user-defined tools, specified in a Session Settings message.
 

@@ -71,10 +71,14 @@ const ChatInterface = ({
   const handleConnectChatGroup = async () => {
     if (status.value === "disconnected") {
       connect().then(() => {
+        // A Session Settings message is sent at the start of each conversation
+        // to equip EVI with the tools and context needed to assist the user.
         sendSessionSettings(sessionSettings);
+        // Send a message to the assistant reminding it of its role.
         sendUserInput(`BEGIN_MESSAGE: begin the conversation or continue where
           you left off. Take into context the previous conversation and continue
           your role as a writer's assistant, embodying the character the user is creating.`);
+        // Unpause the conversation
         setIsPaused(false);
       });
     } else {
