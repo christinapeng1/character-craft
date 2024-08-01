@@ -4,7 +4,6 @@ import sessionSettings from "../pages/chat/sessionSettings";
 import { useNavigate } from "react-router-dom";
 import { Layout, Button } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import ToggleThemeButton from "./buttons/ToggleThemeButton";
 import DisconnectButton from "./buttons/DisconnectButton";
 import About from "./About";
 import MenuList from "./MenuList";
@@ -125,15 +124,14 @@ const ChatInterface = ({
   // Toggle dark theme for the menu
   const toggleTheme = () => setDarkTheme(!darkTheme);
 
-  // Handle toggle click for the menu
-  const handleToggleClick = () => setCollapsed(!collapsed);
+  // Handle collapsing/expanding the menu
+  const handleMenuCollapse = () => setCollapsed(!collapsed);
 
   const isDisabled = status.value === "disconnected" || isPaused;
 
   return (
     <React.Fragment>
       <About open={aboutOpen} onClose={handleCloseAbout} />
-      <ToggleThemeButton darkTheme={darkTheme} togglTheme={toggleTheme} />
       <div className="sidebar-wrapper pointer-events-auto">
         <Layout>
           <Sider
@@ -165,7 +163,7 @@ const ChatInterface = ({
               <Button
                 type="text"
                 className="toggle pointer-events-auto"
-                onClick={handleToggleClick}
+                onClick={handleMenuCollapse}
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               />
             </Header>
@@ -180,7 +178,7 @@ const ChatInterface = ({
         />
       </div>
       <div className="foxcanvas-wrapper pointer-events-auto">
-        <FoxCanvas />
+        <FoxCanvas onClick={toggleTheme} />
       </div>
       <Controls
         color={assistantColorTheme}

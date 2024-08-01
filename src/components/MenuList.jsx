@@ -23,7 +23,7 @@ const MenuList = ({
       icon: <CommentOutlined />,
     },
     {
-      label: "Chats",
+      label: "Past chats",
       key: "chats",
       icon: <BarsOutlined />,
       children: chatGroupItems,

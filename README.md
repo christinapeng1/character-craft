@@ -3,9 +3,9 @@
 </div>
 Character Lab is an interactive workshop space where writers can bring their
 characters to life and engage in conversations with them. Create unique characters,
-build their backstories, and explore their personalities through dynamic dialogues!
+build their backstories, and explore their personalities through dynamic dialogues!  
 
-[Video Showcase]
+![Home Page](src/assets/img/homepage.png)
 
 ## Installation
 
@@ -52,6 +52,8 @@ Throughout the conversation, Paige will ask questions to help you brainstorm you
 Additionally, you can ask Paige for suggestions on what the character might do in
 certain scenarios to help fill in plot holes and develop your story idea.
 
+![Paige Introduction to User](src/assets/img/paige-introduction.png)
+
 ### Interactive Dialogue
 EVI, Hume AI's Empathic Voice Interface is used for dialogue.
 EVI is a voice assistant with emotional intelligence that can detect changes in
@@ -59,12 +61,16 @@ emotions and embody the emotions of the character you are creating.
 It serves as a first-person embodiment of your character, allowing you to explore
 and workshop their personality.
 
+![Dialogue with Paige in creating Russel the Spy character](src/assets/img/russel-the-spy-character.png)
+
 ### Saved Conversation History
 Conversations are saved by fetching previous chat groups associated with your Hume API key.
 To resume a conversation, simply click on a previous chat group from the "Chats" tab.
 The associated `chat_group_id` will be provided as context in the VoiceProvider,
 informing EVI's dialogue and allowing it to remember details from previous conversations.
 You can also rename your previous conversations for easier association and reference.
+
+![Past chats](src/assets/img/past-chats.png)
 
 > ℹ️ Note
 > 
@@ -80,3 +86,4 @@ user message color, or entire color theme. Your selected color theme will be
 saved and retained the next time you run the project. This color customization is
 managed through EVI's user-defined tools, specified in a Session Settings message.
 
+![Change color theme](src/assets/img/change-color-function.png)

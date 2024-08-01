@@ -6,7 +6,7 @@ import React, { useState, Suspense } from "react";
 import FloatingFox from "../../assets/models/floating-fox/FloatingFox";
 import Loader from "../Loader";
 
-const FoxCanvas = () => {
+const FoxCanvas = ({ onClick }) => {
   const adjustFoxForScreenSize = () => {
     let screenScale;
     let screenRotation = [0.15, 0, 0];
@@ -24,14 +24,13 @@ const FoxCanvas = () => {
 
   return (
     <Canvas
-      className={`w-full h-screen bg-transparent ${
-        isRotating ? "cursor-grabbing" : "cursor-grab"
-      }`}
+      className={`w-full h-screen bg-transparent ${isRotating ? "cursor-grabbing" : "cursor-grab"}`}
       camera={{ near: 0.1, far: 1000 }}
       gl={{ antialias: true, alpha: true }}
       onCreated={({ gl }) => {
         gl.setClearColor(new Color(0x000000), 0);
-      }}
+      } }
+      onClick={onClick}
     >
       <Suspense fallback={<Loader />}>
         <ambientLight intensity={0.5} />
@@ -44,19 +43,16 @@ const FoxCanvas = () => {
           scale={foxScale}
           rotation={foxRotation}
           isRotating={isRotating}
-          setIsRotating={setIsRotating}
-        />
+          setIsRotating={setIsRotating} />
         <OrbitControls
           enablePan={true}
           enableRotate={true}
-          enableZoom={false}
-        />
+          enableZoom={false} />
         <EffectComposer>
           <Bloom
             luminanceThreshold={0.3}
             luminanceSmoothing={0.8}
-            height={300}
-          />
+            height={300} />
         </EffectComposer>
       </Suspense>
     </Canvas>

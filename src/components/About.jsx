@@ -30,7 +30,7 @@ const About = ({ open, onClose }) => {
             fontWeight: "700",
           }}
         >
-          Writer's Cloud
+          Character Lab
         </Typography>
         <Box
           sx={{
@@ -61,13 +61,13 @@ const About = ({ open, onClose }) => {
             fontFamily: "Quicksand",
           }}
         >
-          In a sky full of stories, where dreams swirl around,
+          In a world full of stories, where kites freely flap,
           <br />
-          There's a magical place called the Writer's Cloud.
+          There's a magical place called the Character Lab.
           <br />
           Where you start with a name, just a spark, just a seed,
           <br />
-          And craft a new character for the tales that you need.
+          And craft a new pal for the tales that you need.
           <br />
           <br />
           First, choose a name, something grand or quite plain,

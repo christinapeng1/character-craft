@@ -16,7 +16,7 @@ const Home = () => {
         <KiteCanvas />
       </div>
       <div className="about-container">
-        <h1 className="title-text">Writer's Cloud</h1>
+        <h1 className="title-text">Character Lab</h1>
         <h2 className="subtitle-text">
           Create your characters and{" "}
           <button
