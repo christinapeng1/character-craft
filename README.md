@@ -11,12 +11,12 @@ build their backstories, and explore their personalities through dynamic dialogu
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/username/repository.git
+    git clone https://github.com/username/character-lab.git
     ```
 
 2. **In a code editor of your choice, navigate to the project directory:**
     ```bash
-    cd repository
+    cd character-lab
     ```
 
 3. **Install required dependencies:**
