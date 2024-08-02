@@ -5,8 +5,7 @@ Character Lab is an interactive workshop space where writers can bring their
 characters to life and engage in conversations with them. Create unique characters,
 build their backstories, and explore their personalities through dynamic dialogues!  
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/akTrVMSakRw?si=64vqUyDm9O4CBYnM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
+[![Watch the video](src/assets/img/homepage.png)](https://youtu.be/akTrVMSakRw?si=_qyPKEwoak4znSNg)
 
 ## Installation
 
