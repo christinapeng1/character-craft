@@ -1,11 +1,12 @@
 <div align="center">
   <h1>Character Lab</h1>
 </div>
+
+[![Watch the video](src/assets/img/homepage.png)](https://youtu.be/akTrVMSakRw?si=_qyPKEwoak4znSNg)
+
 Character Lab is an interactive workshop space where writers can bring their
 characters to life and engage in conversations with them. Create unique characters,
 build their backstories, and explore their personalities through dynamic dialogues!  
-
-[![Watch the video](src/assets/img/homepage.png)](https://youtu.be/akTrVMSakRw?si=_qyPKEwoak4znSNg)
 
 ## Installation
 
