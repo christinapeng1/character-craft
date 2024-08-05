@@ -30,7 +30,7 @@ const About = ({ open, onClose }) => {
             fontWeight: "700",
           }}
         >
-          Character Lab
+          Inspiwrite
         </Typography>
         <Box
           sx={{
@@ -61,9 +61,9 @@ const About = ({ open, onClose }) => {
             fontFamily: "Quicksand",
           }}
         >
-          In a world full of stories, where kites freely flap,
+          In a land of stories and wandering kites,
           <br />
-          There's a magical place called the Character Lab.
+          There's a magical place called Inspiwrite.
           <br />
           Where you start with a name, just a spark, just a seed,
           <br />

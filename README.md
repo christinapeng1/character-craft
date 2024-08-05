@@ -1,23 +1,25 @@
 <div align="center">
-  <h1>Character Lab</h1>
+  <h1>Inspiwrite</h1>
 </div>
 
 https://github.com/user-attachments/assets/1b1c4f25-2db6-45c2-9683-34e2eaa21d81
 
-Character Lab is an interactive workshop space where writers can bring their
-characters to life and engage in conversations with them. Create unique characters,
-build their backstories, and explore their personalities through dynamic dialogues!  
+Inspiwrite is an interactive workshop space for writers to brainstorm
+character ideas and bring them to life in voice-to-voice conversations.
+Create unique characters, build their backstories, and explore their personalities through dynamic dialogues!  
 
 ## Installation
 
-1. **Clone the repository:**
+1. **Clone the repository:**  
+    Make sure to replace `username` with your own GitHub username:  
+
     ```bash
-    git clone https://github.com/username/character-lab.git
+    git clone https://github.com/username/inspiwrite.git
     ```
 
 2. **In a code editor of your choice, navigate to the project directory:**
     ```bash
-    cd character-lab
+    cd inspiwrite
     ```
 
 3. **Install required dependencies:**
