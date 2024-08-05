@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Inspiwrite</h1>
+  <h1>Inspiwrite: your creative character-building assistant</h1>
 </div>
 
 
@@ -8,7 +8,7 @@ https://github.com/user-attachments/assets/e01ab629-3d3a-4721-9f29-4229b7104232
 
 
 
-Inspiwrite is an interactive workshop space for writers to brainstorm
+Inspiwrite is a creative character-building assistant used for writers to brainstorm
 character ideas and bring them to life in voice-to-voice conversations.
 Create unique characters, build their backstories, and explore their personalities through dynamic dialogues!  
 
