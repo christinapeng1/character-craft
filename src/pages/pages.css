@@ -179,7 +179,7 @@
 .assistant-message {
   align-self: flex-start;
   background-color: #daf8e3;
-  border: 2px solid hsl(0, 0%, 12%);
+  border: 2px solid #b6eac6;
   font-family: "Quicksand", sans-serif;
   font-size: 140%;
   font-weight: 400;

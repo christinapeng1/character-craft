@@ -21,11 +21,13 @@ const NewChat = () => {
   );
   const [aboutOpen, setAboutOpen] = useState(false);
   const [isRenamingChat, setIsRenamingChat] = useState(false);
-  const [assistantColorTheme, setAssistantColorTheme] = useState(
-    localStorage.getItem("assistant_color_theme" || "#daf8e3")
+  const [assistantMessageColor, setAssistantMessageColor] = useState(
+    localStorage.getItem("assistant_message_color" || "#daf8e3")
   );
-  const [userColorTheme, setUserColorTheme] = useState(
-    localStorage.getItem("user_color_theme" || "#f8d7da")
+  const [assistantBorderColor, setAssistantBorderColor] = useState(localStorage.getItem("assistant_border_color") || "#b6eac6");
+  const [userBorderColor, setUserBorderColor] = useState(localStorage.getItem("user_border_color") || "#f5c6cb");
+  const [userMessageColor, setUserMessageColor] = useState(
+    localStorage.getItem("user_message_color" || "#f8d7da")
   );
 
   // Fetch the access token on component mount
@@ -176,14 +178,24 @@ const NewChat = () => {
           auth={{ type: "accessToken", value: accessToken }}
           onMessage={(message) => console.log(message)}
           onError={(error) => console.error(error)}
-          onToolCall={(toolCall) => handleToolCall(toolCall, setAssistantColorTheme, setUserColorTheme)}
+          onToolCall={(toolCall) =>
+            handleToolCall(
+              toolCall,
+              setAssistantMessageColor,
+              setAssistantBorderColor,
+              setUserMessageColor,
+              setUserBorderColor
+            )
+          }
           resumedChatGroupId={chatGroupId}
         >
           <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-auto">
             <ChatInterface
               className="pointer-events-auto"
-              assistantColorTheme={assistantColorTheme}
-              userColorTheme={userColorTheme}
+              assistantMessageColor={assistantMessageColor}
+              assistantBorderColor={assistantBorderColor}
+              userMessageColor={userMessageColor}
+              userBorderColor={userBorderColor}
               currentChatLabel={currentChatLabel}
               chatGroupsData={chatGroupsData}
               handleChatSelect={handleChatSelect}

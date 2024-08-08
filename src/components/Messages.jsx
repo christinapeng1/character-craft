@@ -1,20 +1,18 @@
 import { useVoice } from "@humeai/voice-react";
 import React, { useState, useEffect, useRef } from "react";
-import { darkenColor } from "../utils/adjustColor";
 import SendIcon from "@mui/icons-material/Send";
 import { expressionColors } from "expression-colors";
 import { getTopNProsody } from "../utils/getTopNProsody";
 import Tooltip from "@mui/material/Tooltip";
+import "../pages/pages.css";
 
-const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) => {
+const Messages = ({ assistantMessageColor, assistantBorderColor, userMessageColor, userBorderColor, chatGroupTranscript }) => {
   const { connect, messages, sendUserInput, status } = useVoice();
   const chatEndRef = useRef(null);
   const [userInput, setUserInput] = useState("");
   const [clickedUserEmotionIndex, setClickedUserEmotionIndex] = useState(null);
   const [clickedAssistantEmotionIndex, setClickedAssistantEmotionIndex] =
     useState(null);
-  const assistantBorderColor = darkenColor(assistantColorTheme, 15);
-  const userBorderColor = darkenColor(userColorTheme, 15);
 
   const scrollToBottom = () => {
     if (chatEndRef.current) {
@@ -77,7 +75,7 @@ const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) 
                   key={`past-user-${index}`}
                   className="user-message message"
                   style={{
-                    backgroundColor: userColorTheme,
+                    backgroundColor: userMessageColor,
                     border: "2px solid " + userBorderColor,
                   }}
                 >
@@ -91,7 +89,7 @@ const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) 
                   key={`past-assistant-${index}`}
                   className="assistant-message message"
                   style={{
-                    backgroundColor: assistantColorTheme,
+                    backgroundColor: assistantMessageColor,
                     border: "2px solid " + assistantBorderColor,
                   }}
                 >
@@ -119,7 +117,7 @@ const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) 
                   key={`user-${index}`}
                   className="user-message message"
                   style={{
-                    backgroundColor: userColorTheme,
+                    backgroundColor: userMessageColor,
                     border: "2px solid " + userBorderColor,
                   }}
                 >
@@ -176,7 +174,7 @@ const Messages = ({ assistantColorTheme, userColorTheme, chatGroupTranscript }) 
                   key={`assistant-${index}`}
                   className="assistant-message message"
                   style={{
-                    backgroundColor: assistantColorTheme,
+                    backgroundColor: assistantMessageColor,
                     border: "2px solid " + assistantBorderColor,
                   }}
                 >

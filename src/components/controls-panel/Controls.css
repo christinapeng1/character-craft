@@ -44,7 +44,7 @@
   font-size: 16px;
   cursor: pointer;
   border: none;
-  background-color: #eb703f94;
+  background-color: #daf8e3;
   color: rgb(0, 0, 0);
   border-radius: 5px;
   display: flex;
@@ -65,6 +65,7 @@
 
 .control-button:hover {
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5); /* Reduced solid shadow on hover */
+  background-color: #daf8e3;
 }
 
 .control-button:active {

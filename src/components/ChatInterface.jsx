@@ -16,8 +16,10 @@ const { Header, Sider } = Layout;
 
 const ChatInterface = ({
   characterNames,
-  assistantColorTheme,
-  userColorTheme,
+  assistantMessageColor,
+  assistantBorderColor,
+  userMessageColor,
+  userBorderColor,
   currentChatLabel,
   chatGroupsData,
   handleChatSelect,
@@ -172,8 +174,10 @@ const ChatInterface = ({
       </div>
       <div className="chat-wrapper">
         <Messages
-          assistantColorTheme={assistantColorTheme}
-          userColorTheme={userColorTheme}
+          assistantMessageColor={assistantMessageColor}
+          assistantBorderColor={assistantBorderColor}
+          userMessageColor={userMessageColor}
+          userBorderColor={userBorderColor}
           chatGroupTranscript={chatGroupTranscript}
         />
       </div>
@@ -181,7 +185,7 @@ const ChatInterface = ({
         <FoxCanvas onClick={toggleTheme} />
       </div>
       <Controls
-        color={assistantColorTheme}
+        color={assistantMessageColor}
         currentChatLabel={currentChatLabel}
         handleConnectChatGroup={handleConnectChatGroup}
         lastVoiceMessage={lastVoiceMessage}

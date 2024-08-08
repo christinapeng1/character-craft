@@ -1,14 +1,18 @@
+import { darkenColor } from "../../utils/adjustColor";
+
 /**
  * Handles a tool call and performs color theme changes based on the tool call name and parameters.
  * @param {object} toolCall - The tool call object.
- * @param {function} setAssistantColorTheme - The function to set the assistant's color theme.
- * @param {function} setUserColorTheme - The function to set the user's color theme.
+ * @param {function} setAssistantMessageColor - The function to set the assistant's color theme.
+ * @param {function} setUserMessageColor - The function to set the user's color theme.
  * @returns {object} - The tool response object or tool error object.
  */
 const handleToolCall = async (
   toolCall,
-  setAssistantColorTheme, 
-  setUserColorTheme
+  setAssistantMessageColor,
+  setAssistantBorderColor,
+  setUserMessageColor,
+  setUserBorderColor
 ) => {
   console.log("Tool call received", toolCall);
 
@@ -19,13 +23,21 @@ const handleToolCall = async (
         console.log(
           `Color ${args.assistant_message_color} and ${args.user_message_color}.`
         );
-        setAssistantColorTheme(args.assistant_message_color); // Set the assistant's color theme.
+        setAssistantMessageColor(args.assistant_message_color); // Set the assistant's color theme.
         localStorage.setItem(
-          "assistant_color_theme",
+          "assistant_message_color",
           args.assistant_message_color
         );
-        setUserColorTheme(args.user_message_color); // Set the user's color theme.
-        localStorage.setItem("user_color_theme", args.user_message_color);
+        const assistantBorderColor = darkenColor(args.assistant_message_color, 15);
+        setAssistantBorderColor(assistantBorderColor); // Set the assistant's border color.
+        localStorage.setItem("assistant_border_color", assistantBorderColor);
+
+        setUserMessageColor(args.user_message_color); // Set the user's color theme.
+        localStorage.setItem("user_message_color", args.user_message_color);
+
+        const userBorderColor = darkenColor(args.user_message_color, 15);
+        setUserBorderColor(userBorderColor); // Set the user's border color.
+        localStorage.setItem("user_border_color", userBorderColor);
         return {
           type: "tool_response",
           tool_call_id: toolCall.tool_call_id,
@@ -49,11 +61,18 @@ const handleToolCall = async (
       const args = JSON.parse(toolCall.parameters);
       if (args && args.assistant_message_color) {
         console.log(`Color ${args.assistant_message_color}.`);
-        setAssistantColorTheme(args.assistant_message_color); // Set the assistant's color theme.
+        setAssistantMessageColor(args.assistant_message_color); // Set the assistant's color theme.
         localStorage.setItem(
-          "assistant_color_theme",
+          "assistant_message_color",
           args.assistant_message_color
         );
+
+        const assistantBorderColor = darkenColor(
+          args.assistant_message_color,
+          15
+        );
+        setAssistantBorderColor(assistantBorderColor); // Set the assistant's border color.
+        localStorage.setItem("assistant_border_color", assistantBorderColor);
         return {
           type: "tool_response",
           tool_call_id: toolCall.tool_call_id,
@@ -78,8 +97,12 @@ const handleToolCall = async (
       const args = JSON.parse(toolCall.parameters);
       if (args && args.user_message_color) {
         console.log(`Color ${args.user_message_color}.`);
-        setUserColorTheme(args.user_message_color); // Set the user's color theme.
-        localStorage.setItem("user_color_theme", args.user_message_color);
+        setUserMessageColor(args.user_message_color); // Set the user's color theme.
+        localStorage.setItem("user_message_color", args.user_message_color);
+
+        const userBorderColor = darkenColor(args.user_message_color, 15);
+        setUserBorderColor(userBorderColor); // Set the user's border color.
+        localStorage.setItem("user_border_color", userBorderColor);
         return {
           type: "tool_response",
           tool_call_id: toolCall.tool_call_id,
