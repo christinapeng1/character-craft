@@ -1,14 +1,8 @@
 <div align="center">
-  <h1>Inspiwrite: your creative character-building assistant</h1>
+  <h1>Character Craft: Your Writing Assistant</h1>
 </div>
 
-
-
-https://github.com/user-attachments/assets/e01ab629-3d3a-4721-9f29-4229b7104232
-
-
-
-Inspiwrite is a creative character-building assistant used for writers to brainstorm
+Character Craft is a creative character-building assistant used for writers to brainstorm
 character ideas and bring them to life in voice-to-voice conversations.
 Create unique characters, build their backstories, and explore their personalities through dynamic dialogues!  
 
@@ -18,12 +12,12 @@ Create unique characters, build their backstories, and explore their personaliti
     Make sure to replace `username` with your own GitHub username:  
 
     ```bash
-    git clone https://github.com/username/inspiwrite.git
+    git clone https://github.com/username/character-craft.git
     ```
 
 2. **In a code editor of your choice, navigate to the project directory:**
     ```bash
-    cd inspiwrite
+    cd character-craft
     ```
 
 3. **Install required dependencies:**
