@@ -6,6 +6,8 @@ Character Craft is a creative character-building assistant used for writers to b
 character ideas and bring them to life in voice-to-voice conversations.
 Create unique characters, build their backstories, and explore their personalities through dynamic dialogues!  
 
+Publically hosted at https://character-craft.replit.app/
+
 ## Installation
 
 1. **Clone the repository:**  
