@@ -30,6 +30,27 @@ const NewChat = () => {
     localStorage.getItem("user_message_color" || "#f8d7da")
   );
 
+  useEffect(() => {
+    const unlockAudioContext = () => {
+      const AudioContext = window.AudioContext || (window).webkitAudioContext;
+      if (!AudioContext) return;
+
+      const ctx = new AudioContext();
+      if (ctx.state === "suspended") {
+        ctx.resume();
+      }
+    };
+
+    document.addEventListener("click", unlockAudioContext, { once: true });
+    document.addEventListener("touchstart", unlockAudioContext, { once: true });
+
+    return () => {
+      document.removeEventListener("click", unlockAudioContext);
+      document.removeEventListener("touchstart", unlockAudioContext);
+    };
+  }, []);
+
+
   // Fetch the access token on component mount
   useEffect(() => {
     const fetchToken = async () => {
